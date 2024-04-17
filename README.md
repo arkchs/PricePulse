@@ -1,6 +1,7 @@
 # Project Title
 
 A brief description of what this project does and who it's for.
+Remember to checkout the branch to view the files of the master branch instead of the main branch.
 
 ## Description
 
