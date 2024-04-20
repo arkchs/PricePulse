@@ -1,7 +1,6 @@
 # Project Title
 
-A brief description of what this project does and who it's for.
-Remember to checkout the branch to view the files of the master branch instead of the main branch.
+A price comaparison website that scrapes the data from major e-commerce platforms and present it to the User to let them decide the best Price to buy the item at.
 
 ## Description
 
