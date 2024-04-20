@@ -13,7 +13,11 @@ This project is a web scraping tool built with Python, utilizing gRPC calls to c
 - **User Authentication**: Secure login system using Firebase Authentication.
 - **Favorites Feature**: Users can save their favorite items, managed by Firestore.
 
-## Getting Started
+## Design
+Landing Page | Login Page
+![image](https://github.com/arkchs/PricePulse/assets/113816003/fd82abe1-665c-4198-a418-9267b8f713bd) | ![image](https://github.com/arkchs/PricePulse/assets/113816003/7207f408-c645-4df7-a6dc-f9f1b1a8c46e)
+
+
 
 ### Dependencies
 
