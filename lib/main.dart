@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:price_pulse/login/login_page.dart';
-import 'package:price_pulse/product_page.dart';
 import 'home_page.dart';
 import 'constants.dart';
 void main() async{
@@ -14,10 +13,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       routes: {
         '/':(context) => const HomePage(),
         'loginPage':(context) => const Login(),
-        'productPage':(context) => const ProductPage(),
       },
       theme: themeData
     );

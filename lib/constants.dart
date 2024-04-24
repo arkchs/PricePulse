@@ -13,7 +13,7 @@ ThemeData themeData=ThemeData(
 
 
 //List of the E-commerce websites that list the searched product
-  List<String> companyList=['Amazon','Flipkart','E-Bay'];
+  List<String> companyList=['Amazon','Flipkart','E-Bay','Amazon','Flipkart','E-Bay','Amazon','Flipkart','E-Bay'];
 
 
 

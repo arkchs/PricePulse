@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:price_pulse/product_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController query = TextEditingController();
     var size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
@@ -42,13 +44,13 @@ class HomePage extends StatelessWidget {
               SizedBox(
                 height: size.height * 0.05,
               ),
-              inputField(context),
+              inputField(context,query),
               SizedBox(
                 height: size.height * 0.02,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [searchButton(context), searchButton(context)],
+                children: [searchButton(context,query.text), searchButton(context,query.text)],
               ),
             ]),
       ]),
@@ -88,7 +90,7 @@ class HomePage extends StatelessWidget {
         ],
       );
 
-  Widget searchButton(BuildContext context) {
+  Widget searchButton(BuildContext context, String query) {
     var size = MediaQuery.of(context).size;
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -96,7 +98,7 @@ class HomePage extends StatelessWidget {
         width: size.width / 10,
         height: size.height * 0.05,
         child: TextButton(
-          onPressed: () => {Navigator.pushNamed(context, 'productPage')},
+          onPressed: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => ProductPage(query:query)))},
           style: const ButtonStyle(
             backgroundColor: MaterialStatePropertyAll(Colors.black)
           ),
@@ -112,12 +114,13 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget inputField(BuildContext context) {
+  Widget inputField(BuildContext context,TextEditingController query) {
     var size = MediaQuery.of(context).size;
     return Center(
       child: SizedBox(
         width: size.width * 0.5,
         child: TextFormField(
+          controller: query,
           decoration: InputDecoration(
             enabledBorder: OutlineInputBorder(
                 borderSide: const BorderSide(width: 2, color: Colors.black),
