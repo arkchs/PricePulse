@@ -22,8 +22,8 @@ class HomePage extends StatelessWidget {
               )),
           TextButton.icon(
               onPressed: () => {Navigator.pushNamed(context, 'loginPage')},
-              icon: const  Icon(Icons.abc),
-              label: const  Text('LogIn')),
+              icon: const Icon(Icons.abc),
+              label: const Text('LogIn')),
         ],
       ),
       extendBodyBehindAppBar: true,
@@ -44,14 +44,11 @@ class HomePage extends StatelessWidget {
               SizedBox(
                 height: size.height * 0.05,
               ),
-              inputField(context,query),
+              inputField(context, query),
               SizedBox(
                 height: size.height * 0.02,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [searchButton(context,query.text), searchButton(context,query.text)],
-              ),
+              Center(child: searchButton(context, query.text)),
             ]),
       ]),
     );
@@ -98,10 +95,14 @@ class HomePage extends StatelessWidget {
         width: size.width / 10,
         height: size.height * 0.05,
         child: TextButton(
-          onPressed: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => ProductPage(query:query)))},
+          onPressed: () => {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ProductPage(query: query)))
+          },
           style: const ButtonStyle(
-            backgroundColor: MaterialStatePropertyAll(Colors.black)
-          ),
+              backgroundColor: MaterialStatePropertyAll(Colors.black)),
           child: AutoSizeText(
             'Search',
             style: Theme.of(context)
@@ -114,7 +115,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget inputField(BuildContext context,TextEditingController query) {
+  Widget inputField(BuildContext context, TextEditingController query) {
     var size = MediaQuery.of(context).size;
     return Center(
       child: SizedBox(
@@ -122,10 +123,17 @@ class HomePage extends StatelessWidget {
         child: TextFormField(
           controller: query,
           decoration: InputDecoration(
-            enabledBorder: OutlineInputBorder(
-                borderSide: const BorderSide(width: 2, color: Colors.black),
-                borderRadius: BorderRadius.circular(20.0)),
-            hintText: 'Enter the item to be searched',
+            label: const Text(
+              'Search',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            prefixIcon: const Icon(Icons.search),
+            focusedBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.black, width: 2.3),
+                borderRadius: BorderRadius.all(Radius.circular(9.0))),
+            border: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.black,width: 5.0),
+                borderRadius: BorderRadius.all(Radius.circular(9.0)),),
             hintStyle: Theme.of(context)
                 .textTheme
                 .headlineSmall
