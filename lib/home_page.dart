@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/widgets.dart';
+import 'package:price_pulse/constants.dart';
 import 'package:price_pulse/product_page.dart';
+import 'package:price_pulse/fade_animation.dart';
+import 'package:price_pulse/typing_anim.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -16,14 +20,25 @@ class HomePage extends StatelessWidget {
         actions: [
           TextButton.icon(
               onPressed: () => {},
-              icon: const Icon(Icons.abc),
+              icon: const Icon(
+                Icons.favorite_border,
+                color: Colors.red,
+              ),
               label: const Text(
                 'favorites',
+                style: TextStyle(color: Colors.green, fontSize: 20),
               )),
           TextButton.icon(
-              onPressed: () => {Navigator.pushNamed(context, 'loginPage')},
-              icon: const Icon(Icons.abc),
-              label: const Text('LogIn')),
+            onPressed: () => {Navigator.pushNamed(context, 'loginPage')},
+            icon: const Icon(
+              Icons.login,
+              color: Colors.black,
+            ),
+            label: const Text(
+              'LogIn',
+              style: TextStyle(color: Colors.green, fontSize: 20),
+            ),
+          ),
         ],
       ),
       extendBodyBehindAppBar: true,
@@ -36,20 +51,30 @@ class HomePage extends StatelessWidget {
                     fit: BoxFit.fill, image: AssetImage('Assets/back2.jpg'))),
           ),
         ),
-        Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              title(context),
-              SizedBox(
-                height: size.height * 0.05,
-              ),
-              inputField(context, query),
-              SizedBox(
-                height: size.height * 0.02,
-              ),
-              Center(child: searchButton(context, query.text)),
-            ]),
+        ListView(children: [
+          Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: size.height * 0.25,
+                ),
+                TypingAnimation(),
+                SizedBox(
+                  height: size.height * 0.02,
+                ),
+                inputField(context, query),
+                SizedBox(
+                  height: size.height * 0.02,
+                ),
+                Center(child: searchButton(context, query.text)),
+                SizedBox(
+                  height: size.height * 0.25,
+                ),
+                FadeAnimation(),
+                 SizedBox(height: size.height * 0.3),
+              ]),
+        ]),
       ]),
     );
   }
@@ -57,34 +82,13 @@ class HomePage extends StatelessWidget {
   Widget titleAppBar(BuildContext context) => Padding(
         padding: const EdgeInsets.all(8.0),
         child: AutoSizeText(
-          'Price Compare Pro',
+          'Price Pulse',
           style: Theme.of(context)
               .textTheme
               .headlineLarge
               ?.copyWith(fontWeight: FontWeight.bold),
           maxLines: 1,
         ),
-      );
-
-  Widget title(BuildContext context) => Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: AutoSizeText(
-              'Let\'s Compare!',
-              style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 100,
-                  ),
-              maxLines: 1,
-            ),
-          ),
-          const Icon(
-            Icons.shopping_cart,
-            size: 100,
-          ),
-        ],
       );
 
   Widget searchButton(BuildContext context, String query) {
@@ -132,8 +136,9 @@ class HomePage extends StatelessWidget {
                 borderSide: BorderSide(color: Colors.black, width: 2.3),
                 borderRadius: BorderRadius.all(Radius.circular(9.0))),
             border: const OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.black,width: 5.0),
-                borderRadius: BorderRadius.all(Radius.circular(9.0)),),
+              borderSide: BorderSide(color: Colors.black, width: 5.0),
+              borderRadius: BorderRadius.all(Radius.circular(9.0)),
+            ),
             hintStyle: Theme.of(context)
                 .textTheme
                 .headlineSmall

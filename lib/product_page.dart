@@ -15,15 +15,14 @@ class _ProductPageState extends State<ProductPage> {
   @override
   void initState(){
     super.initState();
-    _asyncWorkAround();
   }
-  Future<List<String>>? _asyncWorkAround() async {
+  Future<List<String>> _asyncWorkAround() async {
     Web_scraper object= Web_scraper();
-    amazon=await object.getDataAmazon(widget.query);
+    // amazon=await object.getDataAmazon(widget.query);
     flipkart = await object.getDataFlipkart(widget.query);
     print(amazon);
     print(flipkart);
-    return [amazon, flipkart];
+    return [flipkart,(flipkart.toDouble()+100).toString()];
   }
   @override
   Widget build(BuildContext context) {
@@ -70,8 +69,21 @@ class _ProductPageState extends State<ProductPage> {
                 padding: const EdgeInsets.only(top: 16),
                 child: Text('Result: ${snapshot.data}'),
               ),
+            ]; 
+          } 
+          else if(snapshot.hasError) {
+            children = <Widget>[
+              const Icon(
+                Icons.error_outline,
+                color: Colors.red,
+                size: 60,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text('Error: ${snapshot.error}'),
+              ),
             ];
-          } else {
+            }else {
             children = const <Widget>[
               SizedBox(
                 width: 60,
