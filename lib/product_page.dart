@@ -10,36 +10,42 @@ class ProductPage extends StatefulWidget {
 
 //product splash animations for making the project look better.
 class _ProductPageState extends State<ProductPage> {
-  var flipkart;
-  var amazon;
+  String? flipkart;
+  String? amazon;
   @override
-  void initState(){
+  void initState() {
     super.initState();
+    // _asyncWorkAround();
   }
+
   Future<List<String>> _asyncWorkAround() async {
-    Web_scraper object= Web_scraper();
-    // amazon=await object.getDataAmazon(widget.query);
-    flipkart = await object.getDataFlipkart(widget.query);
-    print(amazon);
-    print(flipkart);
-    return [flipkart,(flipkart.toDouble()+100).toString()];
+    Web_scraper object = Web_scraper();
+    amazon = "49999";
+    flipkart = "59999";
+    // amazon = await object.getDataAmazon(widget.query);
+    // flipkart = await object.getDataFlipkart(widget.query);
+    // print(amazon);
+    // print(flipkart);
+    return [flipkart ?? '404', amazon ?? '404'];
   }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor: Colors.black45,
       body: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SizedBox(
-            width: size.width * 0.5,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [productImageCard(context, size)],
-            ),
-          ),
+          // SizedBox(
+          //   width: size.width * 0.5,
+          //   child: Column(
+          //     mainAxisAlignment: MainAxisAlignment.center,
+          //     crossAxisAlignment: CrossAxisAlignment.center,
+          //     children: [productImageCard(context, size)],
+          //   ),
+          // ),
           Expanded(
             child: SizedBox(
               width: size.width * 0.3,
@@ -53,7 +59,7 @@ class _ProductPageState extends State<ProductPage> {
   }
 
   Widget priceCards(BuildContext context, var size) {
-    Future<List<String>>? data=_asyncWorkAround();
+    Future<List<String>>? data = _asyncWorkAround();
     return FutureBuilder<List<String>>(
         future: data, // a previously-obtained Future<String> or null
         builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
@@ -67,11 +73,14 @@ class _ProductPageState extends State<ProductPage> {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 16),
-                child: Text('Result: ${snapshot.data}'),
+                child: Text('Result: ${snapshot.data?[0]}'),
               ),
-            ]; 
-          } 
-          else if(snapshot.hasError) {
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text('Result: ${snapshot.data?[1]}'),
+              ),
+            ];
+          } else if (snapshot.hasError) {
             children = <Widget>[
               const Icon(
                 Icons.error_outline,
@@ -83,7 +92,7 @@ class _ProductPageState extends State<ProductPage> {
                 child: Text('Error: ${snapshot.error}'),
               ),
             ];
-            }else {
+          } else {
             children = const <Widget>[
               SizedBox(
                 width: 60,
@@ -101,18 +110,16 @@ class _ProductPageState extends State<ProductPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: children,
           );
-        }
-    );
+        });
   }
-        
 
   Widget productImageCard(BuildContext context, var size) {
-    var _imgsrc = 'Assets/product_sample.jpg';
+    var imgsrc = 'Assets/product_sample.jpg';
     return SizedBox(
       height: size.height * 0.7,
       child: Card(
-        child: Image(image: AssetImage(_imgsrc), fit: BoxFit.fill),
+        child: Image(image: AssetImage(imgsrc), fit: BoxFit.fill),
       ),
     );
   }
-        }
+}

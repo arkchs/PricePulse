@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/widgets.dart';
-import 'package:price_pulse/constants.dart';
 import 'package:price_pulse/product_page.dart';
-import 'package:price_pulse/fade_animation.dart';
-import 'package:price_pulse/typing_anim.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -14,138 +10,119 @@ class HomePage extends StatelessWidget {
     TextEditingController query = TextEditingController();
     var size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: size.height * 0.1,
-        title: titleAppBar(context),
-        actions: [
-          TextButton.icon(
-              onPressed: () => {},
-              icon: const Icon(
-                Icons.favorite_border,
-                color: Colors.red,
-              ),
-              label: const Text(
-                'favorites',
-                style: TextStyle(color: Colors.green, fontSize: 20),
-              )),
-          TextButton.icon(
-            onPressed: () => {Navigator.pushNamed(context, 'loginPage')},
-            icon: const Icon(
-              Icons.login,
-              color: Colors.black,
-            ),
-            label: const Text(
-              'LogIn',
-              style: TextStyle(color: Colors.green, fontSize: 20),
-            ),
-          ),
-        ],
-      ),
-      extendBodyBehindAppBar: true,
-      backgroundColor: Colors.transparent,
-      body: Stack(children: [
-        Center(
-          child: Container(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          // centerTitle: true,
+          toolbarHeight: size.height * 0.07,
+          title: Container(
+            padding: const EdgeInsets.all(3.0),
             decoration: const BoxDecoration(
-                image: DecorationImage(
-                    fit: BoxFit.fill, image: AssetImage('Assets/back2.jpg'))),
+                shape: BoxShape.rectangle, color: Color(0xffd335c6)),
+            child: Text(
+              'Price Pulse',
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineLarge
+                  ?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
+              maxLines: 1,
+            ),
           ),
+          actions: [
+            SearchBar(
+              elevation: const MaterialStatePropertyAll(0),
+              hintText: "Enter The Product Name",
+              hintStyle: MaterialStatePropertyAll(TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              )),
+              padding:
+                  const MaterialStatePropertyAll(EdgeInsets.only(left: 10.0)),
+              shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5.0),
+              )),
+            ),
+            IconButton(
+              onPressed: () => {},
+              icon: Container(
+                padding: const EdgeInsets.all(3.0),
+                decoration: const BoxDecoration(
+                    shape: BoxShape.circle, color: Color(0xffd335c6)),
+                child: const Icon(
+                  Icons.favorite,
+                  color: Colors.white,
+                ),
+              ),
+              // label: Container(
+              //   padding: const EdgeInsets.all(3.0),
+              //   decoration: const BoxDecoration(
+              //       shape: BoxShape.circle, color: Color(0xffd335c6)),
+              //   child: Text(
+              //     'favorite',
+              //     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              //         fontWeight: FontWeight.bold, color: Colors.white),
+              //     maxLines: 1,
+              //   ),
+              // ),
+            ),
+            IconButton(
+              onPressed: () => {Navigator.pushNamed(context, 'loginPage')},
+              icon: Container(
+                padding: const EdgeInsets.all(3.0),
+                decoration: const BoxDecoration(
+                    shape: BoxShape.circle, color: Color(0xffd335c6)),
+                child: const Icon(
+                  Icons.account_circle,
+                  color: Colors.white,
+                ),
+              ),
+              // label: Container(
+              //   padding: const EdgeInsets.all(3.0),
+              //   decoration: const BoxDecoration(
+              //       shape: BoxShape.rectangle, color: Color(0xffd335c6)),
+              //   child: Text(
+              //     'Login',
+              //     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              //         fontWeight: FontWeight.bold, color: Colors.white),
+              //     maxLines: 1,
+              //   ),
+              // ),
+            ),
+          ],
         ),
-        ListView(children: [
-          Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
+        extendBodyBehindAppBar: true,
+        backgroundColor: Colors.transparent,
+        body: Stack(
+          children: [
+            Center(
+              child: Container(
+                decoration: const BoxDecoration(
+                    image: DecorationImage(
+                        fit: BoxFit.fill, image: AssetImage('hello.jpg'))),
+              ),
+            ),
+            ListView(
               children: [
                 SizedBox(
-                  height: size.height * 0.25,
+                  height: size.height * 0.1,
                 ),
-                TypingAnimation(),
-                SizedBox(
-                  height: size.height * 0.02,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image(image: AssetImage('shoe1.jpeg')),
+                    SizedBox(
+                      width: size.width * 0.05,
+                    ),
+                    Image(image: AssetImage('shoe1.jpeg')),
+                    SizedBox(
+                      width: size.width * 0.05,
+                    ),
+                    Image(image: AssetImage('shoe1.jpeg')),
+                  ],
                 ),
-                inputField(context, query),
-                SizedBox(
-                  height: size.height * 0.02,
-                ),
-                Center(child: searchButton(context, query.text)),
-                SizedBox(
-                  height: size.height * 0.25,
-                ),
-                FadeAnimation(),
-                 SizedBox(height: size.height * 0.3),
-              ]),
-        ]),
-      ]),
-    );
-  }
-
-  Widget titleAppBar(BuildContext context) => Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: AutoSizeText(
-          'Price Pulse',
-          style: Theme.of(context)
-              .textTheme
-              .headlineLarge
-              ?.copyWith(fontWeight: FontWeight.bold),
-          maxLines: 1,
-        ),
-      );
-
-  Widget searchButton(BuildContext context, String query) {
-    var size = MediaQuery.of(context).size;
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: SizedBox(
-        width: size.width / 10,
-        height: size.height * 0.05,
-        child: TextButton(
-          onPressed: () => {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => ProductPage(query: query)))
-          },
-          style: const ButtonStyle(
-              backgroundColor: MaterialStatePropertyAll(Colors.black)),
-          child: AutoSizeText(
-            'Search',
-            style: Theme.of(context)
-                .textTheme
-                .headlineMedium
-                ?.copyWith(color: Colors.white),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget inputField(BuildContext context, TextEditingController query) {
-    var size = MediaQuery.of(context).size;
-    return Center(
-      child: SizedBox(
-        width: size.width * 0.5,
-        child: TextFormField(
-          controller: query,
-          decoration: InputDecoration(
-            label: const Text(
-              'Search',
-              style: TextStyle(fontWeight: FontWeight.bold),
+              ],
             ),
-            prefixIcon: const Icon(Icons.search),
-            focusedBorder: const OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.black, width: 2.3),
-                borderRadius: BorderRadius.all(Radius.circular(9.0))),
-            border: const OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.black, width: 5.0),
-              borderRadius: BorderRadius.all(Radius.circular(9.0)),
-            ),
-            hintStyle: Theme.of(context)
-                .textTheme
-                .headlineSmall
-                ?.copyWith(color: Colors.black),
-          ),
-        ),
-      ),
-    );
+          ],
+        ));
   }
 }
