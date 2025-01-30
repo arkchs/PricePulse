@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:price_pulse/login/login_page.dart';
-import 'home_page.dart';
+import 'pages/home_page.dart';
 import 'constants.dart';
 
 void main() async {
