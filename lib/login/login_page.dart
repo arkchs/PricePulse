@@ -1,3 +1,6 @@
+import 'dart:ui';
+
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:price_pulse/login/my_form_widget.dart';
@@ -22,43 +25,16 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
   bool _first = true;
   Map userData = {};
 
-  late final AnimationController _controller = AnimationController(
-    duration: const Duration(seconds: 2),
-    vsync: this,
-  );
-  late final Animation<Offset> _offsetAnimationImage = Tween<Offset>(
-    begin: Offset.zero,
-    end: const Offset(1.0, 0.0),
-  ).animate(CurvedAnimation(
-    parent: _controller,
-    curve: Curves.fastEaseInToSlowEaseOut,
-  ));
-
-  late final Animation<Offset> _offsetAnimationCard = Tween<Offset>(
-    begin: Offset.zero,
-    end: const Offset(-1.0, 0.0),
-  ).animate(CurvedAnimation(
-    parent: _controller,
-    curve: Curves.fastEaseInToSlowEaseOut,
-  ));
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
   void signUpOrLogin() {
-    setState(() {
-      _first ? _controller.forward() : _controller.reverse();
-      _first = !_first;
-    });
+    _first = !_first;
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    Offset topRightOffset = Offset.zero;
-    Offset bottomLeftOffset = Offset(-size.width, size.height);
+    Offset topRightOffset = const Offset(0.0, 0.0 + 200.0);
+    Offset bottomLeftOffset = Offset(-size.width + 200, size.height);
 
     return Material(
       elevation: 50,
@@ -88,67 +64,107 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
               ),
             ),
             Center(
-              child: Row(mainAxisSize: MainAxisSize.min, children: [
-                SlideTransition(
-                    position: _offsetAnimationImage,
-                    child: decorationImage(size, _first)),
-                AnimatedSwitcher(
-                  duration: const Duration(seconds: 3),
-                  child: _first
-                      ? SlideTransition(
-                          position: _first
-                              ? _offsetAnimationCard
-                              : _offsetAnimationImage,
-                          child: MyFormWidget(
-                            title: 'Login',
-                            rather: 'Not a member? Sign Up',
-                            signUpOrLogin: signUpOrLogin,
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: size.width * 0.45,
+                      height: size.height * 0.8,
+                      child: ListView(
+                        // scrollDirection: Axis.horizontal,
+                        // shrinkWrap: true,
+                        children: [
+                          CarouselSlider(
+                            items: [
+                              decorationImage(size, _first, "login_back.jpg"),
+                              decorationImage(size, _first, "back.png"),
+                            ],
+                            options: CarouselOptions(
+                              height: size.height * .8,
+                              enlargeCenterPage: true,
+                              autoPlay: true,
+                              aspectRatio: 16 / 9,
+                              autoPlayCurve: Curves.fastOutSlowIn,
+                              enableInfiniteScroll: true,
+                              autoPlayAnimationDuration:
+                                  const Duration(milliseconds: 800),
+                              viewportFraction: 1.0,
+                            ),
                           ),
-                        )
-                      : SlideTransition(
-                          position: _first
-                              ? _offsetAnimationImage
-                              : _offsetAnimationCard,
-                          child: MyFormWidget(
-                            title: 'SignUp',
-                            rather: 'Already a member? Login',
-                            signUpOrLogin: signUpOrLogin,
-                          ),
-                        ),
-                )
-              ]),
+                          // decorationImage(size, _first, "login_back.jpg"),
+                          // decorationImage(size, _first, "back.png"),
+                        ],
+                      ),
+                    ),
+                    AnimatedSwitcher(
+                      duration: const Duration(seconds: 1),
+
+                      transitionBuilder:
+                          (Widget child, Animation<double> animation) {
+                        return SlideTransition(
+                          position: Tween<Offset>(
+                            begin: const Offset(1.0, 0.0),
+                            end: Offset.zero,
+                          ).animate(animation),
+                          child: child,
+                        );
+                      },
+
+                      //lower of level of control so i wont use it
+                      // switchInCurve: Curves.decelerate,
+                      // switchOutCurve: Curves.decelerate,
+                      // reverseDuration: const Duration(seconds: 1),
+                      child: _first
+                          ? MyFormWidget(
+                              key: const ValueKey('login'),
+                              first: _first,
+                              title: 'Login',
+                              rather: 'Not a member? Sign Up',
+                              signUpOrLogin: signUpOrLogin,
+                            )
+                          : MyFormWidget(
+                              key: const ValueKey('signup'),
+                              first: _first,
+                              title: 'SignUp',
+                              rather: 'Already a member? Login',
+                              signUpOrLogin: signUpOrLogin,
+                            ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
       ),
     );
   }
+}
 
-  AnimatedContainer decorationImage(Size size, bool _first) {
-    return AnimatedContainer(
-      duration: const Duration(seconds: 3),
-      curve: Curves.easeIn,
-      width: size.width * 0.45,
-      height: size.height * 0.8,
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.transparent),
-        image: const DecorationImage(
-            image: AssetImage('Assets/login.png'), fit: BoxFit.fill),
-        borderRadius: _first
-            ? const BorderRadius.only(
-                topLeft: Radius.circular(20), bottomLeft: Radius.circular(20))
-            : const BorderRadius.only(
-                topRight: Radius.circular(20),
-                bottomRight: Radius.circular(20)),
-      ),
-    );
-  }
+Container decorationImage(Size size, bool _first, String assetname) {
+  return Container(
+    // duration: const Duration(seconds: 3),
+    // width: size.width * 0.45,
+    // height: size.height * 0.8,
+    // clipBehavior: Clip.antiAlias,
+    decoration: BoxDecoration(
+      border: Border.all(color: Colors.transparent),
+      image: DecorationImage(
+          // opacity: 0.8,
+          image: AssetImage('Assets/$assetname'),
+          fit: BoxFit.fill),
+      borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(20), bottomLeft: Radius.circular(20)),
+    ),
+  );
+}
 
-  Widget design() {
-    //make this after the completion of adding firebase or the google_signIn api in the logic
-    return Container();
-  }
+Widget design() {
+  //make this after the completion of adding firebase or the google_signIn api in the logic
+  return Container();
 }
 
 class MyCircle extends CustomPainter {
@@ -162,15 +178,13 @@ class MyCircle extends CustomPainter {
     required this.center,
     required this.radius,
     required this.color,
-    this.shadowColor =
-        const Color(0x80000000), // Semi-transparent black for shadow
+    this.shadowColor = const Color(0x80000000),
     this.elevation = 10.0,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
     for (int i = 3; i >= 0; i--) {
-      // Draw shadow (slightly offset from the circle)
       if (i != 0) {
         final shadowPaint = Paint()
           ..color = shadowColor
@@ -190,6 +204,6 @@ class MyCircle extends CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
-    return false; // Return true if repainting is necessary
+    return false;
   }
 }
