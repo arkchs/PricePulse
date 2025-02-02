@@ -31,7 +31,7 @@ class CustomCard extends StatelessWidget {
         child: Column(
           children: [
             Image.asset(
-              'Assets/product_sample.jpg',
+              'assets/product_sample.jpg',
               height: size.height * 0.5,
               fit: BoxFit.fill,
             ),
@@ -42,11 +42,3 @@ class CustomCard extends StatelessWidget {
     );
   }
 }
-
-ThemeData themeData = ThemeData(
-    colorScheme: const ColorScheme.light(
-        background: Color(0xfff8fcff),
-        primary: Color(0xff046581),
-        secondary: Color(0xffdfecf2),
-        inversePrimary: Colors.black38,
-        tertiary: Color.fromARGB(255, 189, 224, 240)));

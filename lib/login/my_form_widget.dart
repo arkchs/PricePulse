@@ -31,7 +31,7 @@ class _MyFormWidgetState extends State<MyFormWidget> {
 
   void googleOnTap() {
     final snackBar = SnackBar(
-      content: const Text('Yay! A SnackBar!'),
+      content: const Text('Yay! A Google SnackBar!'),
       action: SnackBarAction(
         label: 'Undo',
         onPressed: () {
@@ -44,7 +44,7 @@ class _MyFormWidgetState extends State<MyFormWidget> {
 
   void facebookOnTap() {
     final snackBar = SnackBar(
-      content: const Text('Yay! A SnackBar!'),
+      content: const Text('Yay! A Facebook SnackBar!'),
       action: SnackBarAction(
         label: 'Undo',
         onPressed: () {
@@ -57,7 +57,7 @@ class _MyFormWidgetState extends State<MyFormWidget> {
 
   void xOnTap() {
     final snackBar = SnackBar(
-      content: const Text('Yay! A SnackBar!'),
+      content: const Text('Yay! A Twitter SnackBar!'),
       action: SnackBarAction(
         label: 'Undo',
         onPressed: () {
@@ -124,13 +124,42 @@ class _MyFormWidgetState extends State<MyFormWidget> {
                 if (!widget.first)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
-                    child: userTextField(textControllerUsername),
+                    child: myTextField(
+                      textControllerUsername,
+                      'Username',
+                      MultiValidator([
+                        RequiredValidator(errorText: 'Enter a Username'),
+                        MinLengthValidator(8,
+                            errorText: 'Password must be atleast 8 digit'),
+                        PatternValidator(r'(?=.*?[#!@$%^&*-])',
+                            errorText:
+                                'Password must contain atleast one special character')
+                      ]),
+                    ),
                   ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8.0),
-                  child: emailTextField(textControllerEmail),
+                  child: myTextField(
+                    textControllerEmail,
+                    'Email',
+                    MultiValidator([
+                      RequiredValidator(errorText: 'Enter email address'),
+                      EmailValidator(errorText: 'Please Enter a Valid E-mail'),
+                    ]),
+                  ),
                 ),
-                passwordTextField(textControllerPassword),
+                myTextField(
+                  textControllerPassword,
+                  'Password',
+                  MultiValidator([
+                    RequiredValidator(errorText: 'Enter your Password'),
+                    MinLengthValidator(8,
+                        errorText: 'Password must be atleast 8 digit'),
+                    PatternValidator(r'(?=.*?[#!@$%^&*-])',
+                        errorText:
+                            'Password must contain atleast one special character')
+                  ]),
+                ),
                 const SizedBox(
                   height: 50.0,
                 ),
@@ -182,7 +211,7 @@ class _MyFormWidgetState extends State<MyFormWidget> {
       child: GestureDetector(
         onTap: onTap,
         child: SvgPicture.asset(
-          'Assets/$svgimage.svg',
+          'assets/$svgimage.svg',
           // colorFilter: const ColorFilter.mode(Colors.blue, BlendMode.srcIn),
         ),
       ),
@@ -190,62 +219,23 @@ class _MyFormWidgetState extends State<MyFormWidget> {
   }
 
 //Implementation of the sign up button.
-  Widget emailTextField(textEmailController) {
+  Widget myTextField(TextEditingController textController, String title,
+      MultiValidator validator) {
     return TextFormField(
-        controller: textEmailController,
-        validator: MultiValidator([
-          RequiredValidator(errorText: 'Enter email address'),
-          EmailValidator(errorText: 'Please Enter a Valid E-mail'),
-        ]),
-        decoration: InputDecoration(
-            hintText: 'Email',
-            labelText: 'Email',
-            prefixIcon: Icon(
-              Icons.email,
-              color: primary,
-            ),
-            errorStyle: TextStyle(fontSize: 18.0),
-            border: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.red),
-                borderRadius: BorderRadius.all(Radius.circular(30.0)))));
-  }
-
-  Widget passwordTextField(textControllerPassword) {
-    return TextFormField(
-      controller: textControllerPassword,
-      validator: MultiValidator([
-        RequiredValidator(errorText: 'Enter your Password'),
-        MinLengthValidator(8, errorText: 'Password must be atleast 8 digit'),
-        PatternValidator(r'(?=.*?[#!@$%^&*-])',
-            errorText: 'Password must contain atleast one special character')
-      ]),
+      validator: validator.call,
+      style: Theme.of(context).textTheme.displaySmall,
+      controller: textController,
       decoration: InputDecoration(
-        hintText: 'Password',
-        labelText: 'Password',
-        prefixIcon: Icon(
-          Icons.key,
-          color: primary,
-        ),
-        errorStyle: TextStyle(fontSize: 18.0),
-        border: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.red),
-            borderRadius: BorderRadius.all(Radius.circular(30.0))),
-      ),
-    );
-  }
-
-  Widget userTextField(TextEditingController textControllerUsername) {
-    return TextFormField(
-      controller: textControllerPassword,
-      decoration: InputDecoration(
-        hintText: 'Username',
-        labelText: 'Username',
+        hintText: title,
+        labelText: title,
+        labelStyle: Theme.of(context).textTheme.displaySmall,
+        hintStyle: Theme.of(context).textTheme.displaySmall,
         prefixIcon: Icon(
           Icons.account_circle_outlined,
-          color: primary,
+          color: Theme.of(context).colorScheme.primary,
         ),
         errorStyle: const TextStyle(fontSize: 18.0),
-        border: OutlineInputBorder(
+        border: const OutlineInputBorder(
             borderSide: BorderSide(color: Colors.red),
             borderRadius: BorderRadius.all(Radius.circular(30.0))),
       ),
@@ -258,8 +248,8 @@ class MyButton extends StatefulWidget {
   final GlobalKey<FormState> formkey;
   final TextEditingController textControllerEmail;
   final TextEditingController textControllerPassword;
-  TextEditingController? textControllerUsername;
-  MyButton(
+  final TextEditingController? textControllerUsername;
+  const MyButton(
       {super.key,
       required this.text,
       required this.formkey,
@@ -271,7 +261,34 @@ class MyButton extends StatefulWidget {
   State<MyButton> createState() => _MyButtonState();
 }
 
+// TODO: Add the firebase client to implement this logic
 class _MyButtonState extends State<MyButton> {
+  void login() async {
+    if (widget.formkey.currentState!.validate()) {
+      setState(() {});
+      await registerWithEmailPassword(widget.textControllerEmail.text,
+              widget.textControllerPassword.text)
+          .then((result) {
+        //print(result);
+      }).catchError((error) {
+        //print('Login Error: $error');
+      });
+    }
+  }
+
+  void signin() async {
+    if (widget.formkey.currentState!.validate()) {
+      setState(() {});
+      await registerWithEmailPassword(widget.textControllerEmail.text,
+              widget.textControllerPassword.text)
+          .then((result) {
+        //print(result);
+      }).catchError((error) {
+        //print('Login Error: $error');
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -279,16 +296,7 @@ class _MyButtonState extends State<MyButton> {
       height: 50,
       child: TextButton(
         onPressed: () async {
-          if (widget.formkey.currentState!.validate()) {
-            setState(() {});
-            await registerWithEmailPassword(widget.textControllerEmail.text,
-                    widget.textControllerPassword.text)
-                .then((result) {
-              //print(result);
-            }).catchError((error) {
-              //print('Login Error: $error');
-            });
-          }
+          login();
         },
         style: ButtonStyle(
             backgroundColor: const MaterialStatePropertyAll(Colors.blueAccent),
@@ -296,7 +304,10 @@ class _MyButtonState extends State<MyButton> {
                 borderRadius: BorderRadius.circular(30.0)))),
         child: Text(
           widget.text,
-          style: const TextStyle(color: Colors.white, fontSize: 22),
+          style: Theme.of(context)
+              .textTheme
+              .displaySmall
+              ?.copyWith(color: Colors.white),
         ),
       ),
     );

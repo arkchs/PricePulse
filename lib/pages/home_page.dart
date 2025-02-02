@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:price_pulse/widgets/MyAppBar.dart';
-import 'package:price_pulse/pages/product_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -9,43 +6,86 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextEditingController query = TextEditingController();
-    var size = MediaQuery.of(context).size;
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
-        appBar: MyAppBar(size: size),
-        extendBodyBehindAppBar: true,
-        backgroundColor: Colors.transparent,
-        body: Stack(
-          children: [
-            Center(
-              child: Container(
-                decoration: const BoxDecoration(
-                    image: DecorationImage(
-                        fit: BoxFit.fill, image: AssetImage('hello.jpg'))),
-              ),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        elevation: 10.0,
+        backgroundColor: Colors.white,
+        title: Container(
+            color: Theme.of(context).colorScheme.primary,
+            child: Text(
+              "Price Pulse",
+              style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.onPrimary),
+            )),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SearchBar(
+              onTap: () {},
+              shape: const MaterialStatePropertyAll(BeveledRectangleBorder()),
+              hintText: "Enter the Product Name to search!",
+              hintStyle: MaterialStatePropertyAll(
+                  Theme.of(context).textTheme.displaySmall),
+              textStyle: MaterialStatePropertyAll(
+                  Theme.of(context).textTheme.displaySmall),
             ),
-            ListView(
+          ),
+          myButton(() {}, 'Favorites', context),
+          myButton(() {
+            Navigator.pushNamed(context, 'loginPage');
+          }, 'Login', context),
+        ],
+      ),
+      body: ListView(
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: size.width * .05, vertical: 8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  height: size.height * 0.1,
+                Text(
+                  "Search, Compare, Save",
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Colors.grey,
+                        decoration: TextDecoration.underline,
+                      ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Image(image: AssetImage('Assets/shoe1.jpeg')),
-                    SizedBox(
-                      width: size.width * 0.05,
-                    ),
-                    Image(image: AssetImage('Assets/shoe1.jpeg')),
-                    SizedBox(
-                      width: size.width * 0.05,
-                    ),
-                    Image(image: AssetImage('Assets/shoe1.jpeg')),
-                  ],
+                Text(
+                  "Price",
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                Text(
+                  "Compare",
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
               ],
             ),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget myButton(onTap, title, context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ElevatedButton(
+        onPressed: onTap,
+        style: const ButtonStyle(
+            backgroundColor: MaterialStatePropertyAll(Colors.white),
+            elevation: MaterialStatePropertyAll(5.0),
+            shape: MaterialStatePropertyAll(BeveledRectangleBorder())),
+        child: Text(
+          title,
+          style: TextStyle(
+              color: Theme.of(context).colorScheme.onBackground,
+              fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
   }
 }

@@ -1,8 +1,6 @@
 import 'dart:ui';
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:price_pulse/login/my_form_widget.dart';
 
 class Login extends StatefulWidget {
@@ -39,7 +37,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
     return Material(
       elevation: 50,
       child: Scaffold(
-        backgroundColor: const Color(0xff2281ff),
+        backgroundColor: Theme.of(context).colorScheme.background,
         body: Stack(
           children: [
             Align(
@@ -154,7 +152,7 @@ Container decorationImage(Size size, bool _first, String assetname) {
       border: Border.all(color: Colors.transparent),
       image: DecorationImage(
           // opacity: 0.8,
-          image: AssetImage('Assets/$assetname'),
+          image: AssetImage('assets/$assetname'),
           fit: BoxFit.fill),
       borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(20), bottomLeft: Radius.circular(20)),
@@ -197,7 +195,7 @@ class MyCircle extends CustomPainter {
         ..color = color[i]
         ..style = PaintingStyle.fill;
 
-      // Draw main circle
+      //Drawing main circle
       canvas.drawCircle(center, radius * (i + 1), circlePaint);
     }
   }

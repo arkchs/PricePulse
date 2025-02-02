@@ -114,7 +114,7 @@ class _ProductPageState extends State<ProductPage> {
   }
 
   Widget productImageCard(BuildContext context, var size) {
-    var imgsrc = 'Assets/product_sample.jpg';
+    var imgsrc = 'assets/product_sample.jpg';
     return SizedBox(
       height: size.height * 0.7,
       child: Card(
