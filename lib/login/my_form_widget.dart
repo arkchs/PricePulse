@@ -5,13 +5,13 @@ import 'package:price_pulse/utils/authentication.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class MyFormWidget extends StatefulWidget {
-  final Function() signUpOrLogin;
+  // final Function() signUpOrLogin;
   final String rather;
   final String title;
   final bool first;
   const MyFormWidget(
       {super.key,
-      required this.signUpOrLogin,
+      // required this.signUpOrLogin,
       required this.rather,
       required this.title,
       required this.first});
@@ -190,7 +190,7 @@ class _MyFormWidgetState extends State<MyFormWidget> {
                 Center(
                   child: TextButton(
                     onPressed: () {
-                      widget.signUpOrLogin();
+                      // widget.signUpOrLogin();
                     },
                     child: Text(widget.rather),
                   ),

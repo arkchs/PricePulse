@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:price_pulse/login/my_form_widget.dart';
 
 class Login extends StatefulWidget {
@@ -23,10 +24,10 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
   bool _first = true;
   Map userData = {};
 
-  void signUpOrLogin() {
-    _first = !_first;
-    setState(() {});
-  }
+  // void signUpOrLogin() {
+  //   _first = !_first;
+  //   setState(() {});
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -97,40 +98,72 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                         ],
                       ),
                     ),
-                    AnimatedSwitcher(
-                      duration: const Duration(seconds: 1),
+                    // AnimatedSwitcher(
+                    //   duration: const Duration(seconds: 1),
 
-                      transitionBuilder:
-                          (Widget child, Animation<double> animation) {
-                        return SlideTransition(
-                          position: Tween<Offset>(
-                            begin: const Offset(1.0, 0.0),
-                            end: Offset.zero,
-                          ).animate(animation),
-                          child: child,
-                        );
-                      },
+                    //   transitionBuilder:
+                    //       (Widget child, Animation<double> animation) {
+                    //     return SlideTransition(
+                    //       position: Tween<Offset>(
+                    //         begin: const Offset(1.0, 0.0),
+                    //         end: Offset.zero,
+                    //       ).animate(animation),
+                    //       child: child,
+                    //     );
+                    //   },
 
-                      //lower of level of control so i wont use it
-                      // switchInCurve: Curves.decelerate,
-                      // switchOutCurve: Curves.decelerate,
-                      // reverseDuration: const Duration(seconds: 1),
-                      child: _first
-                          ? MyFormWidget(
-                              key: const ValueKey('login'),
-                              first: _first,
+                    //   //lower of level of control so i wont use it
+                    //   // switchInCurve: Curves.decelerate,
+                    //   // switchOutCurve: Curves.decelerate,
+                    //   // reverseDuration: const Duration(seconds: 1),
+                    //   child: _first
+                    //       ? MyFormWidget(
+                    //           key: const ValueKey('login'),
+                    //           first: _first,
+                    //           title: 'Login',
+                    //           rather: 'Not a member? Slide to Sign Up Instead',
+                    //           signUpOrLogin: signUpOrLogin,
+                    //         )
+                    //       : MyFormWidget(
+                    //           key: const ValueKey('signup'),
+                    //           first: _first,
+                    //           title: 'SignUp',
+                    //           rather: 'Already a member? Slide back to Login',
+                    //           signUpOrLogin: signUpOrLogin,
+                    //         ),
+                    // ),
+                    SizedBox(
+                      width: size.width * 0.45,
+                      height: size.height * 0.8,
+                      child: CarouselSlider(
+                          items: const [
+                            MyFormWidget(
+                              key: ValueKey('login'),
+                              first: true,
                               title: 'Login',
-                              rather: 'Not a member? Sign Up',
-                              signUpOrLogin: signUpOrLogin,
-                            )
-                          : MyFormWidget(
-                              key: const ValueKey('signup'),
-                              first: _first,
-                              title: 'SignUp',
-                              rather: 'Already a member? Login',
-                              signUpOrLogin: signUpOrLogin,
+                              rather: 'Not a member? Slide to Sign Up Instead',
+                              // signUpOrLogin: signUpOrLogin,
                             ),
-                    ),
+                            MyFormWidget(
+                              key: ValueKey('signup'),
+                              first: false,
+                              title: 'SignUp',
+                              rather: 'Already a member? Slide back to Login',
+                              // signUpOrLogin: signUpOrLogin,
+                            ),
+                          ],
+                          options: CarouselOptions(
+                            height: size.height * .8,
+                            enlargeCenterPage: true,
+                            autoPlay: false,
+                            aspectRatio: 16 / 9,
+                            autoPlayCurve: Curves.fastOutSlowIn,
+                            enableInfiniteScroll: true,
+                            autoPlayAnimationDuration:
+                                const Duration(milliseconds: 800),
+                            viewportFraction: 1.0,
+                          )),
+                    )
                   ],
                 ),
               ),

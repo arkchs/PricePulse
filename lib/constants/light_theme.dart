@@ -5,15 +5,19 @@ ThemeData lightMode = ThemeData(
     primary: Color(0xff86b8ff),
     onPrimary: Colors.black,
     secondary: Color(0xff2281ff),
-    onSecondary: Color(0xff2281ff),
-    tertiary: Color(0xff2281ff),
-    onTertiary: Color(0xff2281ff),
+    onSecondary: Colors.white,
+    tertiary: Color(0xff1145ff),
+    onTertiary: Colors.white,
     background: Color(0xff2281ff),
     onBackground: Colors.black,
   ),
   textTheme: const TextTheme(
     bodyLarge: TextStyle(
-      fontSize: 100.0,
+      fontSize: 80.0,
+      fontWeight: FontWeight.bold,
+    ),
+    bodyMedium: TextStyle(
+      fontSize: 50.0,
       fontWeight: FontWeight.bold,
     ),
     bodySmall: TextStyle(
