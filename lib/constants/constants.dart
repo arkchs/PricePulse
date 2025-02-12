@@ -42,3 +42,8 @@ class CustomCard extends StatelessWidget {
     );
   }
 }
+
+class RoutePathGo {
+  static const String home = '/';
+  static const String login = '/login';
+}

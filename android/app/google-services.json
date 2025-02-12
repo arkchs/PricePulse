@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "337794451410",
+    "project_id": "pricecomparisonwebsite-4c723",
+    "storage_bucket": "pricecomparisonwebsite-4c723.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337794451410:android:896dd5895489bd9a26ea0b",
+        "android_client_info": {
+          "package_name": "com.example.price_pulse"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "337794451410-43akk27jmfi9p2o4mscb1sbhta75t9ft.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBYAlDqKjOItRzYDsYXB4acUxL7sdrf6lE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "337794451410-43akk27jmfi9p2o4mscb1sbhta75t9ft.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

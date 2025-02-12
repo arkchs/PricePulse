@@ -1,33 +1,22 @@
 import 'dart:ui';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:price_pulse/login/my_form_widget.dart';
 
-class Login extends StatefulWidget {
-  const Login({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  State<Login> createState() => _LoginState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
-  @override
-  void initState() {
-    super.initState();
-  }
-
+class _LoginPageState extends State<LoginPage>
+    with SingleTickerProviderStateMixin {
   final Color c1 = const Color(0xff5da2ff);
   final Color c2 = const Color(0xff5aa0ff);
   final Color c3 = const Color(0xff509dff);
   final Color c4 = const Color(0xff4193ff);
-  bool _first = true;
   Map userData = {};
-
-  // void signUpOrLogin() {
-  //   _first = !_first;
-  //   setState(() {});
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +27,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
     return Material(
       elevation: 50,
       child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         body: Stack(
           children: [
             Align(
@@ -78,8 +67,8 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                         children: [
                           CarouselSlider(
                             items: [
-                              decorationImage(size, _first, "login_back.jpg"),
-                              decorationImage(size, _first, "back.png"),
+                              decorationImage(size, "login_back.jpg"),
+                              decorationImage(size, "back.png"),
                             ],
                             options: CarouselOptions(
                               height: size.height * .8,
@@ -175,7 +164,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
   }
 }
 
-Container decorationImage(Size size, bool _first, String assetname) {
+Container decorationImage(Size size, String assetname) {
   return Container(
     // duration: const Duration(seconds: 3),
     // width: size.width * 0.45,

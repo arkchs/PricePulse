@@ -8,8 +8,9 @@ ThemeData lightMode = ThemeData(
     onSecondary: Colors.white,
     tertiary: Color(0xff1145ff),
     onTertiary: Colors.white,
-    background: Color(0xff2281ff),
+    background: Colors.white24,
     onBackground: Colors.black,
+    surface: Colors.grey,
   ),
   textTheme: const TextTheme(
     bodyLarge: TextStyle(

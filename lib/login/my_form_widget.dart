@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:auto_size_text/auto_size_text.dart';
+import 'package:go_router/go_router.dart';
 import 'package:price_pulse/utils/authentication.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -76,7 +76,7 @@ class _MyFormWidgetState extends State<MyFormWidget> {
       height: size.height * 0.8,
       decoration: BoxDecoration(
         // color: Colors.white.withOpacity(0.8),
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.onTertiary,
         // backgroundBlendMode: BlendMode.srcOver,
         border: Border.all(
           color: Colors.transparent,
@@ -103,7 +103,7 @@ class _MyFormWidgetState extends State<MyFormWidget> {
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: AutoSizeText(
+                  child: Text(
                     widget.title,
                     style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                         fontWeight: FontWeight.bold,
@@ -111,7 +111,7 @@ class _MyFormWidgetState extends State<MyFormWidget> {
                         color: textColor),
                   ),
                 ),
-                AutoSizeText(
+                Text(
                   "Please ${widget.title} to continue",
                   style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                       fontWeight: FontWeight.normal,
@@ -264,14 +264,16 @@ class MyButton extends StatefulWidget {
 // TODO: Add the firebase client to implement this logic
 class _MyButtonState extends State<MyButton> {
   void login() async {
+    print("login works");
     if (widget.formkey.currentState!.validate()) {
       setState(() {});
-      await registerWithEmailPassword(widget.textControllerEmail.text,
+      await signInWithEmailPassword(widget.textControllerEmail.text,
               widget.textControllerPassword.text)
           .then((result) {
-        //print(result);
+        print(result);
+        context.go('/');
       }).catchError((error) {
-        //print('Login Error: $error');
+        print('Login Error: $error');
       });
     }
   }
@@ -283,6 +285,7 @@ class _MyButtonState extends State<MyButton> {
               widget.textControllerPassword.text)
           .then((result) {
         //print(result);
+        context.go('/');
       }).catchError((error) {
         //print('Login Error: $error');
       });
@@ -295,7 +298,7 @@ class _MyButtonState extends State<MyButton> {
       width: MediaQuery.of(context).size.width * 0.18,
       height: 50,
       child: TextButton(
-        onPressed: () async {
+        onPressed: () {
           login();
         },
         style: ButtonStyle(
