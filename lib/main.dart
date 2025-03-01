@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:price_pulse/constants/constants.dart';
 import 'package:price_pulse/constants/theme.dart';
 import 'package:price_pulse/login/login_page.dart';
+import 'package:price_pulse/pages/product_page.dart';
 import 'package:provider/provider.dart';
 import 'pages/home_page.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -42,13 +43,19 @@ class MyApp extends StatelessWidget {
 
 final _router = GoRouter(routes: [
   GoRoute(
-    path: RoutePathGo.home,
-    builder: (context, state) => const HomePage(),
-  ),
+      path: RoutePathGo.home,
+      builder: (context, state) => const HomePage(),
+      routes: [
+        GoRoute(
+          path: RoutePathGo.product,
+          builder: (context, state) =>
+              ProductPage(query: state.pathParameters['query']!),
+        ),
+      ]),
   GoRoute(
     path: RoutePathGo.login,
     builder: (context, state) => const LoginPage(),
-  )
+  ),
 ]);
 
 

@@ -1,6 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:price_pulse/constants/theme.dart';
@@ -67,22 +67,89 @@ class _HomePageState extends State<HomePage>
         ),
         actions: [
           Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                height: 50,
+                width: 100,
+                child: TextFormField(
+                  clipBehavior: Clip.antiAlias,
+                  controller: query,
+                  style: TextStyle(fontSize: 10.0),
+
+                  // onSubmitted: (value) {
+                  //   context.goNamed('/product',
+                  //       pathParameters: {'query': query.text});
+                  // },
+                ),
+              )
+              // child: SearchAnchor(
+              //   suggestionsBuilder:
+              //       (BuildContext context, SearchController controller) {
+              //     return List<ListTile>.generate(5, (int index) {
+              //       final String item = 'item $index';
+              //       return ListTile(
+              //         shape: BeveledRectangleBorder(
+              //             borderRadius: BorderRadius.circular(0.0)),
+              //         title: Text(
+              //           item,
+              //           style: Theme.of(context).textTheme.displaySmall,
+              //         ),
+              //         onTap: () {
+              //           setState(() {
+              //             controller.closeView(item);
+              //           });
+              //         },
+              //       );
+              //     });
+              //   },
+              //   builder: (context, controller) => SearchBar(
+              //     shadowColor: const MaterialStatePropertyAll(Colors.grey),
+              //     backgroundColor: const MaterialStatePropertyAll(Colors.white),
+              //     elevation: const MaterialStatePropertyAll(0.0),
+              //     onTap: () {
+              //       controller.openView();
+              //     },
+              //     onSubmitted: (value) {
+              //       debugPrint('value submitted $value');
+              //       context.goNamed('/product',
+              //           pathParameters: {'query': query.text});
+              //     },
+              //     shape: const MaterialStatePropertyAll(BeveledRectangleBorder()),
+              //     hintText: "Enter the Product Name to search!",
+              //     hintStyle: MaterialStatePropertyAll(Theme.of(context)
+              //         .textTheme
+              //         .displaySmall
+              //         ?.copyWith(color: Colors.black)),
+              //     textStyle: MaterialStatePropertyAll(Theme.of(context)
+              //         .textTheme
+              //         .displaySmall
+              //         ?.copyWith(color: Colors.black)),
+              //   ),
+              // ),
+              ),
+          Padding(
             padding: const EdgeInsets.all(8.0),
-            child: SearchBar(
-              shadowColor: const MaterialStatePropertyAll(Colors.grey),
-              backgroundColor: const MaterialStatePropertyAll(Colors.white),
-              elevation: const MaterialStatePropertyAll(0.0),
-              onTap: () {},
-              shape: const MaterialStatePropertyAll(BeveledRectangleBorder()),
-              hintText: "Enter the Product Name to search!",
-              hintStyle: MaterialStatePropertyAll(Theme.of(context)
-                  .textTheme
-                  .displaySmall
-                  ?.copyWith(color: Colors.black)),
-              textStyle: MaterialStatePropertyAll(Theme.of(context)
-                  .textTheme
-                  .displaySmall
-                  ?.copyWith(color: Colors.black)),
+            child: ElevatedButton(
+              onPressed: () {
+                if (query.text.isNotEmpty) {
+                  context.goNamed('/product',
+                      pathParameters: {'query': query.text});
+                } else {
+                  debugPrint('No query entered');
+                }
+              },
+              style: ButtonStyle(
+                  backgroundColor: MaterialStatePropertyAll(
+                      Theme.of(context).colorScheme.tertiary),
+                  elevation: const MaterialStatePropertyAll(5.0),
+                  shape:
+                      const MaterialStatePropertyAll(BeveledRectangleBorder())),
+              child: Text(
+                'Search',
+                style: TextStyle(
+                    color: Theme.of(context).colorScheme.onTertiary,
+                    fontWeight: FontWeight.bold),
+              ),
             ),
           ),
           Padding(
@@ -248,6 +315,7 @@ class _HomePageState extends State<HomePage>
           const SizedBox(
             height: 50,
           ),
+          Center(child: Text("Loading Happiness!")),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -278,9 +346,38 @@ class _HomePageState extends State<HomePage>
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('Search for your favorite products'),
-              Text('and we will give you the best price across'),
-              Text('the internet!'),
+              Text('Search for your favorite products and we will give you '),
+              Text('the best price across the internet!'),
+              CarouselSlider(
+                  items: [1, 2, 3, 4, 5].map((i) {
+                    return Builder(
+                      builder: (BuildContext context) {
+                        try {
+                          return Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Container(
+                              clipBehavior: Clip.antiAlias,
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(30.0)),
+                              ),
+                              child: Image.network(
+                                  'https://picsum.photos/700/700?random=$i',
+                                  fit: BoxFit.fill),
+                            ),
+                          );
+                        } catch (e) {
+                          return Text(
+                              "Error encountered in displaying Image: $e.");
+                        }
+                      },
+                    );
+                  }).toList(),
+                  options: CarouselOptions(
+                    aspectRatio: 21 / 9,
+                    autoPlay: true,
+                    viewportFraction: 0.4,
+                  ))
             ],
           ),
           dividerHorizontal(size),
@@ -288,7 +385,7 @@ class _HomePageState extends State<HomePage>
             height: 50,
           ),
           Column(
-            children: [Text('Found an Error?'), Text('Contact Us please!')],
+            children: [Text('Having an issue?'), Text('Contact Us please!')],
           )
         ],
       ),
