@@ -43,8 +43,18 @@ class CustomCard extends StatelessWidget {
   }
 }
 
-class RoutePathGo {
-  static const String home = '/';
-  static const String login = '/login';
-  static const String product = '/product/:query';
+class RouteInfo {
+  final String routePath;
+  final String routeName;
+  const RouteInfo({required this.routeName, required this.routePath});
+}
+
+class RoutesData {
+  static const RouteInfo home = RouteInfo(routePath: '/', routeName: 'home');
+  static const RouteInfo login =
+      RouteInfo(routePath: '/login', routeName: 'login');
+  static const RouteInfo product =
+      RouteInfo(routePath: '/product/:query', routeName: 'product');
+  static const RouteInfo favorites =
+      RouteInfo(routePath: '/favorites/:userId', routeName: 'favorites');
 }

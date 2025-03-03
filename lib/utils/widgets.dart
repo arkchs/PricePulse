@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class Header extends StatelessWidget {
   const Header(this.heading, {super.key});
@@ -60,4 +61,31 @@ class StyledButton extends StatelessWidget {
         onPressed: onPressed,
         child: child,
       );
+}
+
+class AppBarButton extends StatelessWidget {
+  final void Function()? onPressed;
+  final String title;
+  const AppBarButton({super.key, required this.title, required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ButtonStyle(
+            backgroundColor: MaterialStatePropertyAll(
+                Theme.of(context).colorScheme.tertiary),
+            elevation: const MaterialStatePropertyAll(5.0),
+            shape: const MaterialStatePropertyAll(BeveledRectangleBorder())),
+        child: Text(
+          title,
+          style: TextStyle(
+              color: Theme.of(context).colorScheme.onTertiary,
+              fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
+  }
 }

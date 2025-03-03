@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:price_pulse/web_scraping.dart';
+import 'dart:html' as html;
 
 class ProductPage extends StatefulWidget {
   const ProductPage({super.key, required this.query});

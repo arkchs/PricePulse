@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:price_pulse/login/my_form_widget.dart';
+import 'package:price_pulse/auth_utils/my_form_widget.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

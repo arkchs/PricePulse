@@ -264,16 +264,16 @@ class MyButton extends StatefulWidget {
 // TODO: Add the firebase client to implement this logic
 class _MyButtonState extends State<MyButton> {
   void login() async {
-    print("login works");
+    debugPrint("login works");
     if (widget.formkey.currentState!.validate()) {
       setState(() {});
       await signInWithEmailPassword(widget.textControllerEmail.text,
               widget.textControllerPassword.text)
           .then((result) {
-        print(result);
+        debugPrint(result);
         context.go('/');
       }).catchError((error) {
-        print('Login Error: $error');
+        debugPrint('Login Error: $error');
       });
     }
   }

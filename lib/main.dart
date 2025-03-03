@@ -2,7 +2,8 @@ import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:price_pulse/constants/constants.dart';
 import 'package:price_pulse/constants/theme.dart';
-import 'package:price_pulse/login/login_page.dart';
+import 'package:price_pulse/pages/favorites_page.dart';
+import 'package:price_pulse/pages/login_page.dart';
 import 'package:price_pulse/pages/product_page.dart';
 import 'package:provider/provider.dart';
 import 'pages/home_page.dart';
@@ -43,21 +44,62 @@ class MyApp extends StatelessWidget {
 
 final _router = GoRouter(routes: [
   GoRoute(
-      path: RoutePathGo.home,
+      name: RoutesData.home.routeName,
+      path: RoutesData.home.routePath,
       builder: (context, state) => const HomePage(),
-      routes: [
-        GoRoute(
-          path: RoutePathGo.product,
-          builder: (context, state) =>
-              ProductPage(query: state.pathParameters['query']!),
-        ),
-      ]),
+      routes: []),
   GoRoute(
-    path: RoutePathGo.login,
+    name: RoutesData.product.routeName,
+    path: RoutesData.product.routePath,
+    builder: (context, state) =>
+        ProductPage(query: state.pathParameters['query']!),
+  ),
+  GoRoute(
+    name: RoutesData.login.routeName,
+    path: RoutesData.login.routePath,
     builder: (context, state) => const LoginPage(),
   ),
+  GoRoute(
+    name: RoutesData.favorites.routeName,
+    path: RoutesData.favorites.routePath,
+    builder: (context, state) {
+      //TODO: Make an api call to get the user id and the list of favorites of this user.
+      return FavoritesPage(
+          userId: state.pathParameters['userId']!,
+          userFavoritesList: const [
+            'abc123',
+            'def456',
+            'ghi789',
+            'jkl012',
+            'mno345',
+            'pqr678',
+            'stu901',
+            'vwx234',
+            'yza567',
+            'bcd890',
+          ]);
+      // if ((state.pathParameters['token'] != null) &&
+      //     state.pathParameters['token'] == 'yayboi') {
+      //   //TODO: Make an api call to get the user id and the list of favorites of this user.
+      //   String userId = 'Akshat123';
+      //   return FavoritesPage(
+      //     userId: userId,
+      //     userFavoritesList: const [],
+      //   );
+      // } else {
+      //   return const LoginPage();
+      // }
+    },
+    // routes: [
+    //   GoRoute(
+    //     name: RoutesData.product.routeName,
+    //     path: RoutesData.product.routePath,
+    //     builder: (context, state) =>
+    //         ProductPage(query: state.pathParameters['query']!),
+    //   ),
+    // ],
+  ),
 ]);
-
 
 // final _router = GoRouter(
 //   routes: [

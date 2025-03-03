@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:price_pulse/constants/theme.dart';
+import 'package:price_pulse/utils/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart' // new
     hide
@@ -42,6 +43,13 @@ class _HomePageState extends State<HomePage>
     super.dispose();
   }
 
+  void redirectToProductPage(String query) {
+    query.isNotEmpty
+        ? context.goNamed('/product', pathParameters: {'query': query})
+        : ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('The query cannot be empty!')));
+  }
+
   bool light = false;
   @override
   Widget build(BuildContext context) {
@@ -75,101 +83,15 @@ class _HomePageState extends State<HomePage>
                   clipBehavior: Clip.antiAlias,
                   controller: query,
                   style: TextStyle(fontSize: 10.0),
-
-                  // onSubmitted: (value) {
-                  //   context.goNamed('/product',
-                  //       pathParameters: {'query': query.text});
-                  // },
+                  onFieldSubmitted: (value) =>
+                      redirectToProductPage(query.text),
                 ),
-              )
-              // child: SearchAnchor(
-              //   suggestionsBuilder:
-              //       (BuildContext context, SearchController controller) {
-              //     return List<ListTile>.generate(5, (int index) {
-              //       final String item = 'item $index';
-              //       return ListTile(
-              //         shape: BeveledRectangleBorder(
-              //             borderRadius: BorderRadius.circular(0.0)),
-              //         title: Text(
-              //           item,
-              //           style: Theme.of(context).textTheme.displaySmall,
-              //         ),
-              //         onTap: () {
-              //           setState(() {
-              //             controller.closeView(item);
-              //           });
-              //         },
-              //       );
-              //     });
-              //   },
-              //   builder: (context, controller) => SearchBar(
-              //     shadowColor: const MaterialStatePropertyAll(Colors.grey),
-              //     backgroundColor: const MaterialStatePropertyAll(Colors.white),
-              //     elevation: const MaterialStatePropertyAll(0.0),
-              //     onTap: () {
-              //       controller.openView();
-              //     },
-              //     onSubmitted: (value) {
-              //       debugPrint('value submitted $value');
-              //       context.goNamed('/product',
-              //           pathParameters: {'query': query.text});
-              //     },
-              //     shape: const MaterialStatePropertyAll(BeveledRectangleBorder()),
-              //     hintText: "Enter the Product Name to search!",
-              //     hintStyle: MaterialStatePropertyAll(Theme.of(context)
-              //         .textTheme
-              //         .displaySmall
-              //         ?.copyWith(color: Colors.black)),
-              //     textStyle: MaterialStatePropertyAll(Theme.of(context)
-              //         .textTheme
-              //         .displaySmall
-              //         ?.copyWith(color: Colors.black)),
-              //   ),
-              // ),
-              ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-              onPressed: () {
-                if (query.text.isNotEmpty) {
-                  context.goNamed('/product',
-                      pathParameters: {'query': query.text});
-                } else {
-                  debugPrint('No query entered');
-                }
-              },
-              style: ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll(
-                      Theme.of(context).colorScheme.tertiary),
-                  elevation: const MaterialStatePropertyAll(5.0),
-                  shape:
-                      const MaterialStatePropertyAll(BeveledRectangleBorder())),
-              child: Text(
-                'Search',
-                style: TextStyle(
-                    color: Theme.of(context).colorScheme.onTertiary,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-              onPressed: () => context.go('/login'),
-              style: ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll(
-                      Theme.of(context).colorScheme.tertiary),
-                  elevation: const MaterialStatePropertyAll(5.0),
-                  shape:
-                      const MaterialStatePropertyAll(BeveledRectangleBorder())),
-              child: Text(
-                'Favorites',
-                style: TextStyle(
-                    color: Theme.of(context).colorScheme.onTertiary,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),
+              )),
+          AppBarButton(
+              title: 'Favorites',
+              onPressed: () => context.goNamed('favorites',
+                  pathParameters: {'userId': 'random-token'})),
+          AppBarButton(title: 'Account', onPressed: () => context.go('/login')),
           // Consumer<ApplicationState>(
           //   builder: (context, appState, _) => AuthFunc(
           //       loggedIn: appState.loggedIn,
@@ -177,24 +99,6 @@ class _HomePageState extends State<HomePage>
           //         FirebaseAuth.instance.signOut();
           //       }),
           // ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-              onPressed: () => context.go('/login'),
-              style: ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll(
-                      Theme.of(context).colorScheme.tertiary),
-                  elevation: const MaterialStatePropertyAll(5.0),
-                  shape:
-                      const MaterialStatePropertyAll(BeveledRectangleBorder())),
-              child: Text(
-                'Account',
-                style: TextStyle(
-                    color: Theme.of(context).colorScheme.onTertiary,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),
           Switch(
             activeColor: Theme.of(context).colorScheme.tertiary,
             activeTrackColor: Theme.of(context).colorScheme.onTertiary,
