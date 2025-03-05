@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:price_pulse/web_scraping.dart';
 import 'dart:html' as html;
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class ProductPage extends StatefulWidget {
   const ProductPage({super.key, required this.query});
@@ -19,15 +20,52 @@ class _ProductPageState extends State<ProductPage> {
     // _asyncWorkAround();
   }
 
+  Future<String> fetchScrapedDataFlipkart() async {
+    final url =
+        Uri.parse("http://localhost:5000/scrape?url=https://example.com");
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return data['data'];
+      } else {
+        print("Failed to scrape: ${response.body}");
+        return 'Failed to scrape';
+      }
+    } catch (e) {
+      print("Error: $e");
+      return 'Failed to scrape';
+    }
+  }
+
+  Future<String> fetchScrapedDataAmazon() async {
+    final url = Uri.parse(
+        "http://localhost:5000/scrape-amazon?url=https://example.com");
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return data['data'];
+      } else {
+        print("Failed to scrape: ${response.body}");
+        return 'Failed to scrape';
+      }
+    } catch (e) {
+      print("Error: $e");
+
+      return 'Failed to scrape';
+    }
+  }
+
   Future<List<String>> _asyncWorkAround() async {
-    Web_scraper object = Web_scraper();
-    amazon = "49999";
-    flipkart = "59999";
-    // amazon = await object.getDataAmazon(widget.query);
-    // flipkart = await object.getDataFlipkart(widget.query);
-    // print(amazon);
-    // print(flipkart);
-    return [flipkart ?? '404', amazon ?? '404'];
+    final String flipkartPrices = await fetchScrapedDataFlipkart();
+    final String amazonPrices = await fetchScrapedDataAmazon();
+    // flipkartPrices.addAll(amazonPrices);
+    return [flipkartPrices, amazonPrices];
   }
 
   @override
@@ -60,7 +98,7 @@ class _ProductPageState extends State<ProductPage> {
   }
 
   Widget priceCards(BuildContext context, var size) {
-    Future<List<String>>? data = _asyncWorkAround();
+    Future<List<String>> data = _asyncWorkAround();
     return FutureBuilder<List<String>>(
         future: data, // a previously-obtained Future<String> or null
         builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {

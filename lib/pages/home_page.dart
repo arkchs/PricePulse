@@ -45,7 +45,7 @@ class _HomePageState extends State<HomePage>
 
   void redirectToProductPage(String query) {
     query.isNotEmpty
-        ? context.goNamed('/product', pathParameters: {'query': query})
+        ? context.goNamed('product', pathParameters: {'query': query})
         : ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('The query cannot be empty!')));
   }
