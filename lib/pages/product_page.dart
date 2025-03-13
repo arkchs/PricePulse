@@ -1,7 +1,11 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'dart:html' as html;
+import 'package:go_router/go_router.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:price_pulse/constants/theme.dart';
+import 'package:price_pulse/utils/widgets.dart';
+import 'package:provider/provider.dart';
 
 class ProductPage extends StatefulWidget {
   const ProductPage({super.key, required this.query});
@@ -14,150 +18,219 @@ class ProductPage extends StatefulWidget {
 class _ProductPageState extends State<ProductPage> {
   String? flipkart;
   String? amazon;
-  @override
-  void initState() {
-    super.initState();
-    // _asyncWorkAround();
-  }
 
-  Future<String> fetchScrapedDataFlipkart() async {
-    final url =
-        Uri.parse("http://localhost:5000/scrape?url=https://example.com");
+  Future<List<String>> fetchScrapedDataFlipkart(String query) async {
+    final url = Uri.parse("http://localhost:5000/scrape?q=$query");
 
     try {
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        return data['data'];
+        final data = jsonDecode(response.body)["data"];
+        List<String> output = data.substring(1, data.length - 1).split(", ");
+        return output;
       } else {
-        print("Failed to scrape: ${response.body}");
-        return 'Failed to scrape';
+        debugPrint("Failed to scrape from Flipkart: ${response.body}");
+        return ['Failed to scrape from Flipkart'];
       }
     } catch (e) {
-      print("Error: $e");
-      return 'Failed to scrape';
+      debugPrint("Error: $e");
+      return ['Failed to scrape'];
     }
   }
 
-  Future<String> fetchScrapedDataAmazon() async {
-    final url = Uri.parse(
-        "http://localhost:5000/scrape-amazon?url=https://example.com");
+  Future<List<String>> fetchScrapedDataAmazon(String query) async {
+    final url = Uri.parse("http://localhost:5000/scrape-amazon?q=$query");
 
     try {
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        return data['data'];
+        final data = jsonDecode(response.body)["data"];
+        List<String> output = data.substring(1, data.length - 1).split(", ");
+        return output;
       } else {
-        print("Failed to scrape: ${response.body}");
-        return 'Failed to scrape';
+        debugPrint("Failed to scrape from Amazon: ${response.body}");
+        return ['Failed to scrape from Amazon'];
       }
     } catch (e) {
-      print("Error: $e");
+      debugPrint("Error: $e");
 
-      return 'Failed to scrape';
+      return ['Failed to scrape'];
     }
   }
 
-  Future<List<String>> _asyncWorkAround() async {
-    final String flipkartPrices = await fetchScrapedDataFlipkart();
-    final String amazonPrices = await fetchScrapedDataAmazon();
+  Future<List<String>> _asyncWorkAround(String query) async {
+    // final List<String> flipkartPrices = await fetchScrapedDataFlipkart(query);
+    final List<String> amazonPrices = await fetchScrapedDataAmazon(query);
     // flipkartPrices.addAll(amazonPrices);
-    return [flipkartPrices, amazonPrices];
+    return amazonPrices;
   }
 
   @override
   Widget build(BuildContext context) {
+    bool dark = Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
     var size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.black45,
-      body: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          // SizedBox(
-          //   width: size.width * 0.5,
-          //   child: Column(
-          //     mainAxisAlignment: MainAxisAlignment.center,
-          //     crossAxisAlignment: CrossAxisAlignment.center,
-          //     children: [productImageCard(context, size)],
-          //   ),
-          // ),
-          Expanded(
-            child: SizedBox(
-              width: size.width * 0.3,
-              height: size.height * 0.5,
-              child: priceCards(context, size),
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.onTertiary,
+        elevation: Provider.of<ThemeProvider>(context, listen: false).isDarkMode
+            ? 3.0
+            : 10.0,
+        shadowColor: Theme.of(context).colorScheme.surface,
+        leading: SizedBox(),
+        leadingWidth: 0.0,
+        title: GestureDetector(
+          onTap: () => context.goNamed('home'),
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10),
+            color: Theme.of(context).colorScheme.tertiary,
+            child: Text(
+              "Price Pulse",
+              style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.onTertiary),
             ),
+          ),
+        ),
+        actions: [
+          AppBarButton(
+              title: 'Favorites',
+              onPressed: () => context.goNamed('favorites',
+                  pathParameters: {'userId': 'random-token'})),
+          AppBarButton(title: 'Account', onPressed: () => context.go('/login')),
+          Switch(
+            activeColor: Theme.of(context).colorScheme.tertiary,
+            activeTrackColor: Theme.of(context).colorScheme.onTertiary,
+            inactiveThumbColor: Theme.of(context).colorScheme.tertiary,
+            inactiveTrackColor: Theme.of(context).colorScheme.onTertiary,
+            value: dark,
+            onChanged: (value) => {
+              setState(() {
+                dark = !dark;
+              }),
+              Provider.of<ThemeProvider>(context, listen: false).toggleTheme(),
+            },
           )
         ],
+      ),
+      backgroundColor: Theme.of(context).colorScheme.background,
+      body: SingleChildScrollView(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            alertsBarVertical(size, context),
+            Expanded(
+              child: SizedBox(
+                width: size.width * 1,
+                height: size.height * 1,
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: priceCards('ch520',
+                      'https://picsum.photos/700/700?random=10', '5000'),
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
 
-  Widget priceCards(BuildContext context, var size) {
-    Future<List<String>> data = _asyncWorkAround();
+  Column alertsBarVertical(Size size, BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: size.width * .008),
+          child: Container(
+            height: size.height * 1,
+            width: size.width * 0.09,
+            decoration:
+                BoxDecoration(color: Theme.of(context).colorScheme.tertiary),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget priceCards(String title, String imageLink, String price) {
+    List<String> hardCoded = [
+      'ch520',
+      'ch520',
+      'ch520',
+      'ch520',
+      'ch520',
+      'ch520',
+      'ch520',
+      'ch520',
+      'ch520'
+    ];
+    Future<List<String>> data = _asyncWorkAround(widget.query);
     return FutureBuilder<List<String>>(
-        future: data, // a previously-obtained Future<String> or null
+        future: data,
         builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
-          List<Widget> children;
+          Widget child;
           if (snapshot.hasData) {
-            children = <Widget>[
-              const Icon(
-                Icons.check_circle_outline,
-                color: Colors.green,
-                size: 60,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: Text('Result: ${snapshot.data?[0]}'),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: Text('Result: ${snapshot.data?[1]}'),
-              ),
-            ];
+            List<String> priceData = snapshot.data!;
+            child = GridView.count(
+                primary: false,
+                padding: const EdgeInsets.all(20),
+                crossAxisSpacing: 5,
+                mainAxisSpacing: 5,
+                crossAxisCount: 4,
+                children: <Widget>[
+                  for (int i = 0; i < priceData.length; i++)
+                    customCard(hardCoded[0], priceData[i], imageLink)
+                ]);
           } else if (snapshot.hasError) {
-            children = <Widget>[
-              const Icon(
-                Icons.error_outline,
-                color: Colors.red,
-                size: 60,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: Text('Error: ${snapshot.error}'),
-              ),
-            ];
+            child = Padding(
+              padding: const EdgeInsets.only(top: 16),
+              child: Text('Error: ${snapshot.error}'),
+            );
           } else {
-            children = const <Widget>[
-              SizedBox(
-                width: 60,
-                height: 60,
-                child: CircularProgressIndicator(),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 16),
-                child: Text('Awaiting result...'),
-              ),
-            ];
+            child = Column(
+              children: const [
+                SizedBox(
+                  width: 60,
+                  height: 60,
+                  child: CircularProgressIndicator(),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 16),
+                  child: Text('Awaiting result...'),
+                ),
+              ],
+            );
           }
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: children,
-          );
+          return child;
         });
   }
 
-  Widget productImageCard(BuildContext context, var size) {
-    var imgsrc = 'assets/product_sample.jpg';
-    return SizedBox(
-      height: size.height * 0.7,
-      child: Card(
-        child: Image(image: AssetImage(imgsrc), fit: BoxFit.fill),
+  Container customCard(title, subtitle, imageLink) {
+    return Container(
+      child: Column(
+        children: [
+          ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: Image.network(
+                imageLink,
+                width: 300,
+                height: 300,
+                fit: BoxFit.fill,
+              )),
+          SizedBox(height: 8.0),
+          Text(
+            title,
+            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 4.0),
+          Text(
+            subtitle,
+            style: TextStyle(fontSize: 14.0, color: Colors.grey[600]),
+          ),
+        ],
       ),
     );
   }

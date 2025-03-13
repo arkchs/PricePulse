@@ -30,7 +30,7 @@ ThemeData lightMode = ThemeData(
       fontWeight: FontWeight.bold,
     ),
     displayMedium: TextStyle(
-      fontSize: 100.0,
+      fontSize: 50.0,
       fontWeight: FontWeight.bold,
     ),
     displaySmall: TextStyle(

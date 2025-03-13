@@ -7,13 +7,12 @@ import 'package:html/parser.dart' as html_parser;
 
 void main() async {
   final router = Router();
-
-  // Scraping endpoint
   router.get('/scrape', (Request request) async {
-    final url = 'https://www.flipkart.com/search?q=ch520';
-    // if (url == null) {
-    //   return Response.badRequest(body: 'Missing "url" query parameter');
-    // }
+    final String? query = request.url.queryParameters['q'];
+    final String url = 'https://flipkart.com/search?q=$query';
+    if (query == null) {
+      return Response.badRequest(body: 'Missing "url" query parameter');
+    }
 
     try {
       final response = await http.get(Uri.parse(url));
@@ -22,11 +21,10 @@ void main() async {
       }
 
       final document = html_parser.parse(response.body);
-      final element = document
+      final List<String> element = document
           .querySelectorAll('div.Nx9bqj')
           .map((element) => element.text)
           .toList();
-
       return Response.ok('{"data": "$element"}', headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*', // Manually add CORS headers
@@ -37,7 +35,11 @@ void main() async {
   });
 
   router.get('/scrape-amazon', (Request request) async {
-    final url = 'https://www.amazon.in/s?k=ch520';
+    final String? query = request.url.queryParameters['q'];
+    final url = 'https://amazon.in/s?k=$query';
+    if (query == null) {
+      return Response.badRequest(body: 'Missing "url" query parameter');
+    }
     Map<String, String> reqHeader = {
       "User-Agent":
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36",
@@ -49,16 +51,12 @@ void main() async {
       "DNT": "1",
       "Connection": "keep-alive",
       "Upgrade-Insecure-Requests": "1",
-      "Access-Control-Allow-Origin": "*", // Required for CORS support to work
-      "Access-Control-Allow-Credentials":
-          "true", // Required for cookies, authorization headers with HTTPS
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Credentials": "true",
       "Access-Control-Allow-Headers":
           "Origin,Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,locale",
       "Access-Control-Allow-Methods": "POST, OPTIONS"
     };
-    // if (url == null) {
-    //   return Response.badRequest(body: 'Missing "url" query parameter');
-    // }
 
     try {
       final response = await http.get(Uri.parse(url), headers: reqHeader);
@@ -67,14 +65,14 @@ void main() async {
       }
 
       final document = html_parser.parse(response.body);
-      final element = document
+      final List<String> element = document
           .querySelectorAll('span.a-price-whole')
           .map((element) => element.text)
           .toList();
 
       return Response.ok('{"data": "$element"}', headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*', // Manually add CORS headers
+        'Access-Control-Allow-Origin': '*',
       });
     } catch (e) {
       return Response.internalServerError(body: 'Scraping error: $e');
@@ -87,7 +85,7 @@ void main() async {
             final response = await innerHandler(request);
             return response.change(headers: {
               ...response.headers,
-              'Access-Control-Allow-Origin': '*', // Allow all origins
+              'Access-Control-Allow-Origin': '*',
               'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
               'Access-Control-Allow-Headers': 'Content-Type',
             });

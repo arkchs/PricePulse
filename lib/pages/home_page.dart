@@ -77,12 +77,17 @@ class _HomePageState extends State<HomePage>
           Padding(
               padding: const EdgeInsets.all(8.0),
               child: SizedBox(
-                height: 50,
-                width: 100,
+                height: 200,
+                width: size.width * .3,
                 child: TextFormField(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    label: Text('Search'),
+                    labelStyle: Theme.of(context).textTheme.displaySmall,
+                  ),
                   clipBehavior: Clip.antiAlias,
                   controller: query,
-                  style: TextStyle(fontSize: 10.0),
+                  style: Theme.of(context).textTheme.displaySmall,
                   onFieldSubmitted: (value) =>
                       redirectToProductPage(query.text),
                 ),
@@ -92,13 +97,6 @@ class _HomePageState extends State<HomePage>
               onPressed: () => context.goNamed('favorites',
                   pathParameters: {'userId': 'random-token'})),
           AppBarButton(title: 'Account', onPressed: () => context.go('/login')),
-          // Consumer<ApplicationState>(
-          //   builder: (context, appState, _) => AuthFunc(
-          //       loggedIn: appState.loggedIn,
-          //       signOut: () {
-          //         FirebaseAuth.instance.signOut();
-          //       }),
-          // ),
           Switch(
             activeColor: Theme.of(context).colorScheme.tertiary,
             activeTrackColor: Theme.of(context).colorScheme.onTertiary,
@@ -172,14 +170,6 @@ class _HomePageState extends State<HomePage>
                       SizedBox(
                         width: size.width * .05,
                       ),
-                      // Padding(
-                      //   padding: const EdgeInsets.only(top: 50),
-                      //   child: SvgPicture.asset(
-                      //     'shopping.svg',
-                      //     height: size.height * .75,
-                      //     width: size.width * .35,
-                      //   ),
-                      // ),
                       Padding(
                         padding: const EdgeInsets.only(top: 50),
                         child: Lottie.asset(
@@ -188,26 +178,6 @@ class _HomePageState extends State<HomePage>
                           width: size.width * .3,
                           'sale.json',
                         ),
-                        // Lottie.asset(
-                        //   controller: _controller,
-                        //   height: size.height * .7,
-                        //   width: size.width * .3,
-                        //   'one.json',
-                        // ),
-                        // Lottie.asset(
-                        //   controller: _controller,
-                        //   height: size.height * .7,
-                        //   width: size.width * .3,
-                        //   'two.json',
-                        // ),
-                        // Lottie.asset(
-                        //   controller: _controller,
-                        //   height: size.height * .7,
-                        //   width: size.width * .3,
-                        //   'three.json',
-                        // ),
-                        // ],
-                        // ),
                       )
                     ],
                   ),
@@ -289,7 +259,10 @@ class _HomePageState extends State<HomePage>
             height: 50,
           ),
           Column(
-            children: [Text('Having an issue?'), Text('Contact Us please!')],
+            children: const [
+              Text('Having an issue?'),
+              Text('Contact Us please!')
+            ],
           )
         ],
       ),
