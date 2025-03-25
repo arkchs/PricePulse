@@ -1,11 +1,15 @@
-import 'package:carousel_slider/carousel_slider.dart';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:price_pulse/constants/theme.dart';
+import 'package:price_pulse/models/product.dart';
 import 'package:price_pulse/utils/widgets.dart';
 import 'package:provider/provider.dart';
+import 'dart:js' as js;
 
 class ProductPage extends StatefulWidget {
   const ProductPage({super.key, required this.query});
@@ -39,30 +43,43 @@ class _ProductPageState extends State<ProductPage> {
     }
   }
 
-  Future<List<String>> fetchScrapedDataAmazon(String query) async {
+  Future<List<Product>> fetchScrapedDataAmazon(String query) async {
     final url = Uri.parse("http://localhost:5000/scrape-amazon?q=$query");
 
     try {
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body)["data"];
-        List<String> output = data.substring(1, data.length - 1).split(", ");
+        final price = jsonDecode(response.body)["data"];
+        final imageLink = jsonDecode(response.body)["imageLink"];
+        // debugPrint("title: $query");
+        // debugPrint("title: $imageLink");
+        // debugPrint("title: $title");
+        List<String> outputPrice =
+            price.substring(1, price.length - 1).split(", ");
+        List<String> outputLinks =
+            imageLink.substring(1, imageLink.length - 1).split(", ");
+        List<Product> output = [];
+        int count = min(outputPrice.length, 5);
+        for (int i = 0; i < count; i++) {
+          output.add(Product(
+              name: query, imageLink: outputLinks[i], price: outputPrice[i]));
+        }
         return output;
       } else {
         debugPrint("Failed to scrape from Amazon: ${response.body}");
-        return ['Failed to scrape from Amazon'];
+        return [];
       }
     } catch (e) {
       debugPrint("Error: $e");
 
-      return ['Failed to scrape'];
+      return [];
     }
   }
 
-  Future<List<String>> _asyncWorkAround(String query) async {
+  Future<List<Product>> _asyncWorkAround(String query) async {
     // final List<String> flipkartPrices = await fetchScrapedDataFlipkart(query);
-    final List<String> amazonPrices = await fetchScrapedDataAmazon(query);
+    final List<Product> amazonPrices = await fetchScrapedDataAmazon(query);
     // flipkartPrices.addAll(amazonPrices);
     return amazonPrices;
   }
@@ -78,8 +95,8 @@ class _ProductPageState extends State<ProductPage> {
             ? 3.0
             : 10.0,
         shadowColor: Theme.of(context).colorScheme.surface,
-        leading: SizedBox(),
-        leadingWidth: 0.0,
+        // leading: SizedBox(),
+        // leadingWidth: 0.0,
         title: GestureDetector(
           onTap: () => context.goNamed('home'),
           child: Container(
@@ -120,15 +137,14 @@ class _ProductPageState extends State<ProductPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            alertsBarVertical(size, context),
+            AlertsBarVertical(),
             Expanded(
               child: SizedBox(
                 width: size.width * 1,
                 height: size.height * 1,
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
-                  child: priceCards('ch520',
-                      'https://picsum.photos/700/700?random=10', '5000'),
+                  child: priceCards(),
                 ),
               ),
             )
@@ -138,42 +154,41 @@ class _ProductPageState extends State<ProductPage> {
     );
   }
 
-  Column alertsBarVertical(Size size, BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: size.width * .008),
-          child: Container(
-            height: size.height * 1,
-            width: size.width * 0.09,
-            decoration:
-                BoxDecoration(color: Theme.of(context).colorScheme.tertiary),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget priceCards(String title, String imageLink, String price) {
-    List<String> hardCoded = [
-      'ch520',
-      'ch520',
-      'ch520',
-      'ch520',
-      'ch520',
-      'ch520',
-      'ch520',
-      'ch520',
-      'ch520'
-    ];
-    Future<List<String>> data = _asyncWorkAround(widget.query);
-    return FutureBuilder<List<String>>(
+  Widget priceCards() {
+    // List<String> hardCoded = [
+    //   '1000',
+    //   '4000',
+    //   '1000',
+    //   '4000',
+    //   '1000',
+    //   '4000',
+    //   '1000',
+    //   '4000',
+    //   '1000',
+    //   '4000',
+    // ];
+    Future<List<Product>> data = _asyncWorkAround(widget.query);
+    // return GridView.count(
+    //     childAspectRatio: 1 / 1.5,
+    //     primary: false,
+    //     padding: const EdgeInsets.all(20),
+    //     crossAxisSpacing: 60,
+    //     mainAxisSpacing: 20,
+    //     crossAxisCount: 4,
+    //     children: <Widget>[
+    //       for (var entry in hardCoded)
+    //         customCard(
+    //             widget.query,
+    //             entry,
+    //             'https://m.media-amazon.com/images/I/41lArSiD5hL._AC_UY218_.jpg',
+    //             'amazon')
+    //     ]);
+    return FutureBuilder<List<Product>>(
         future: data,
-        builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<List<Product>> snapshot) {
           Widget child;
           if (snapshot.hasData) {
-            List<String> priceData = snapshot.data!;
+            List<Product> priceData = snapshot.data!;
             child = GridView.count(
                 primary: false,
                 padding: const EdgeInsets.all(20),
@@ -181,8 +196,9 @@ class _ProductPageState extends State<ProductPage> {
                 mainAxisSpacing: 5,
                 crossAxisCount: 4,
                 children: <Widget>[
-                  for (int i = 0; i < priceData.length; i++)
-                    customCard(hardCoded[0], priceData[i], imageLink)
+                  for (var entry in priceData)
+                    customCard(entry.getName, entry.getPrice,
+                        entry.getImageLink, 'amazon')
                 ]);
           } else if (snapshot.hasError) {
             child = Padding(
@@ -208,29 +224,101 @@ class _ProductPageState extends State<ProductPage> {
         });
   }
 
-  Container customCard(title, subtitle, imageLink) {
-    return Container(
-      child: Column(
-        children: [
-          ClipRRect(
-              borderRadius: BorderRadius.circular(8.0),
+  GestureDetector customCard(title, subtitle, imageLink, website) {
+    return GestureDetector(
+      onTap: () {
+        String link = '';
+        switch (website) {
+          case 'amazon':
+            {
+              link = 'https://www.amazon.in/s?k=$title';
+            }
+            break;
+          case 'flipkart':
+            {
+              link = 'https://www.flipkart.com/search?q=$title';
+            }
+            break;
+          default:
+            {
+              link = 'https://www.amazon.in/s?k=$title';
+            }
+            break;
+        }
+        if (link.isNotEmpty) js.context.callMethod('open', [link]);
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.tertiary,
+          boxShadow: [
+            BoxShadow(
+              color: Theme.of(context).colorScheme.surface,
+              spreadRadius: 1,
+              blurRadius: 2,
+              offset: const Offset(0, 3),
+            ),
+          ],
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              clipBehavior: Clip.antiAlias,
               child: Image.network(
                 imageLink,
                 width: 300,
-                height: 300,
-                fit: BoxFit.fill,
-              )),
-          SizedBox(height: 8.0),
-          Text(
-            title,
-            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 4.0),
-          Text(
-            subtitle,
-            style: TextStyle(fontSize: 14.0, color: Colors.grey[600]),
-          ),
-        ],
+                height: 200,
+                fit: BoxFit.contain,
+              ),
+            ),
+            SizedBox(height: 4.0),
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.onSecondary,
+                            fontSize: 26.0,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 4.0),
+                      Text(
+                        '₹$subtitle',
+                        style: TextStyle(
+                            fontSize: 26.0,
+                            color: Theme.of(context).colorScheme.onSecondary),
+                      ),
+                      SizedBox(height: 4.0),
+                    ],
+                  ),
+                  Text(
+                    website,
+                    style: TextStyle(fontSize: 14.0, color: Colors.white),
+                  ),
+                  Column(
+                    children: [
+                      SizedBox(height: 4.0),
+                      IconButton(
+                          onPressed: () {},
+                          icon: Icon(
+                            Icons.favorite,
+                            color: Colors.red,
+                          ))
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

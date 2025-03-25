@@ -9,12 +9,14 @@ class MyFormWidget extends StatefulWidget {
   final String rather;
   final String title;
   final bool first;
+  final bool login;
   const MyFormWidget(
       {super.key,
       // required this.signUpOrLogin,
       required this.rather,
       required this.title,
-      required this.first});
+      required this.first,
+      required this.login});
 
   @override
   State<MyFormWidget> createState() => _MyFormWidgetState();
@@ -129,11 +131,6 @@ class _MyFormWidgetState extends State<MyFormWidget> {
                       'Username',
                       MultiValidator([
                         RequiredValidator(errorText: 'Enter a Username'),
-                        MinLengthValidator(8,
-                            errorText: 'Password must be atleast 8 digit'),
-                        PatternValidator(r'(?=.*?[#!@$%^&*-])',
-                            errorText:
-                                'Password must contain atleast one special character')
                       ]),
                     ),
                   ),
@@ -165,10 +162,12 @@ class _MyFormWidgetState extends State<MyFormWidget> {
                 ),
                 Center(
                   child: MyButton(
-                      text: widget.title,
-                      formkey: _formkey,
-                      textControllerEmail: textControllerEmail,
-                      textControllerPassword: textControllerPassword),
+                    text: widget.title,
+                    formkey: _formkey,
+                    textControllerEmail: textControllerEmail,
+                    textControllerPassword: textControllerPassword,
+                    login: widget.login,
+                  ),
                 ),
                 const SizedBox(
                   height: 50.0,
@@ -249,31 +248,40 @@ class MyButton extends StatefulWidget {
   final TextEditingController textControllerEmail;
   final TextEditingController textControllerPassword;
   final TextEditingController? textControllerUsername;
+  final bool login;
   const MyButton(
       {super.key,
       required this.text,
       required this.formkey,
       this.textControllerUsername,
       required this.textControllerEmail,
-      required this.textControllerPassword});
+      required this.textControllerPassword,
+      required this.login});
 
   @override
   State<MyButton> createState() => _MyButtonState();
 }
 
-// TODO: Add the firebase client to implement this logic
 class _MyButtonState extends State<MyButton> {
   void login() async {
-    debugPrint("login works");
+    debugPrint("entering login");
     if (widget.formkey.currentState!.validate()) {
       setState(() {});
       await signInWithEmailPassword(widget.textControllerEmail.text,
               widget.textControllerPassword.text)
-          .then((result) {
-        debugPrint(result);
+          .then((result) async {
+        // debugPrint(result);
+        // String? token = await FirebaseAuth.instance.currentUser?.getIdToken();
+        // debugPrint(token);
         context.go('/');
       }).catchError((error) {
         debugPrint('Login Error: $error');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Login Error: $error'),
+            backgroundColor: Colors.red,
+          ),
+        );
       });
     }
   }
@@ -287,7 +295,12 @@ class _MyButtonState extends State<MyButton> {
         //print(result);
         context.go('/');
       }).catchError((error) {
-        //print('Login Error: $error');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Login Error: $error'),
+            backgroundColor: Colors.red,
+          ),
+        );
       });
     }
   }
@@ -299,7 +312,7 @@ class _MyButtonState extends State<MyButton> {
       height: 50,
       child: TextButton(
         onPressed: () {
-          login();
+          widget.login ? login() : signin();
         },
         style: ButtonStyle(
             backgroundColor: const MaterialStatePropertyAll(Colors.blueAccent),

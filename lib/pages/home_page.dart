@@ -98,6 +98,8 @@ class _HomePageState extends State<HomePage>
                   pathParameters: {'userId': 'random-token'})),
           AppBarButton(title: 'Account', onPressed: () => context.go('/login')),
           Switch(
+            activeThumbImage: AssetImage('moon.png'),
+            inactiveThumbImage: AssetImage('sun.png'),
             activeColor: Theme.of(context).colorScheme.tertiary,
             activeTrackColor: Theme.of(context).colorScheme.onTertiary,
             inactiveThumbColor: Theme.of(context).colorScheme.tertiary,
@@ -117,7 +119,7 @@ class _HomePageState extends State<HomePage>
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              alertsBarVertical(size, context),
+              AlertsBarVertical(),
               Column(
                 children: [
                   Row(
@@ -266,45 +268,6 @@ class _HomePageState extends State<HomePage>
           )
         ],
       ),
-    );
-  }
-
-  Column alertsBarVertical(Size size, BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: size.width * .025),
-          child: Container(
-            height: size.height * 1,
-            width: size.width * .05,
-            decoration:
-                BoxDecoration(color: Theme.of(context).colorScheme.tertiary),
-            child: Padding(
-              padding: const EdgeInsets.only(left: 10.0),
-              child: CarouselSlider(
-                options: CarouselOptions(
-                    scrollDirection: Axis.vertical,
-                    autoPlay: true,
-                    viewportFraction: 1.0,
-                    autoPlayAnimationDuration:
-                        const Duration(milliseconds: 1000)),
-                items: [
-                  Text(" A \n M \n A \n Z \n O \n N ",
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onSecondary)),
-                  Text(" F \n L \n I \n P \n K \n A \n R \n T ",
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onSecondary)),
-                  Text(" M \n O \n R \n E \n\n T \n O \n\n C \n O \n M \n E ",
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onSecondary)),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
     );
   }
 

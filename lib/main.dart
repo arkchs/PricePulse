@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:price_pulse/constants/constants.dart';
 import 'package:price_pulse/constants/theme.dart';
+import 'package:price_pulse/pages/account_page.dart';
 import 'package:price_pulse/pages/favorites_page.dart';
 import 'package:price_pulse/pages/login_page.dart';
 import 'package:price_pulse/pages/product_page.dart';
@@ -41,42 +43,107 @@ class MyApp extends StatelessWidget {
   }
 }
 
-final _router = GoRouter(routes: [
-  GoRoute(
+final _router = GoRouter(
+  routes: [
+    GoRoute(
       name: RoutesData.home.routeName,
       path: RoutesData.home.routePath,
       builder: (context, state) => const HomePage(),
-      routes: []),
-  GoRoute(
-    name: RoutesData.product.routeName,
-    path: RoutesData.product.routePath,
-    builder: (context, state) =>
-        ProductPage(query: state.pathParameters['query']!),
-  ),
-  GoRoute(
-    name: RoutesData.login.routeName,
-    path: RoutesData.login.routePath,
-    builder: (context, state) => const LoginPage(),
-  ),
-  GoRoute(
-    name: RoutesData.favorites.routeName,
-    path: RoutesData.favorites.routePath,
-    builder: (context, state) {
-      //TODO: Make an api call to get the user id and the list of favorites of this user.
-      return FavoritesPage(
-          userId: state.pathParameters['userId']!,
-          userFavoritesList: const [
-            'abc123',
-            'def456',
-            'ghi789',
-            'jkl012',
-            'mno345',
-            'pqr678',
-            'stu901',
-            'vwx234',
-            'yza567',
-            'bcd890',
-          ]);
+    ),
+    GoRoute(
+      name: RoutesData.product.routeName,
+      path: RoutesData.product.routePath,
+      builder: (context, state) =>
+          ProductPage(query: state.pathParameters['query']!),
+    ),
+    GoRoute(
+      redirect: (context, state) {
+        final isLoggedIn = FirebaseAuth.instance.currentUser != null;
+        if (isLoggedIn) {
+          // var token = await FirebaseAuth.instance.currentUser?.getIdToken();
+          // debugPrint("Oh the user is currently logged in! XD ${token}");
+          return RoutesData.accounts.routePath;
+        } else {
+          return null;
+        }
+      },
+      name: RoutesData.login.routeName,
+      path: RoutesData.login.routePath,
+      builder: (context, state) => const LoginPage(),
+    ),
+    GoRoute(
+      path: RoutesData.accounts.routePath,
+      name: RoutesData.accounts.routeName,
+      builder: (context, state) => const AccountPage(),
+    ),
+    GoRoute(
+      redirect: (context, state) {
+        final isLoggedIn = FirebaseAuth.instance.currentUser != null;
+        if (isLoggedIn) {
+          // var token = await FirebaseAuth.instance.currentUser?.getIdToken();
+          // debugPrint("Oh the user is currently logged in! XD ${token}");
+          return null;
+        } else {
+          return RoutesData.login.routePath;
+        }
+      },
+      name: RoutesData.favorites.routeName,
+      path: RoutesData.favorites.routePath,
+      builder: (context, state) => FavoritesPage(
+        userId: state.pathParameters['userId']!,
+        userFavoritesList: const [
+          'abc123',
+          'def456',
+          'ghi789',
+          'jkl012',
+          'mno345',
+          'pqr678',
+          'stu901',
+          'vwx234',
+          'yza567',
+          'bcd890',
+        ],
+      ),
+    ),
+  ],
+);
+
+// final _router = GoRouter(routes: [
+//   GoRoute(
+//       name: RoutesData.home.routeName,
+//       path: RoutesData.home.routePath,
+//       builder: (context, state) => const HomePage(),
+//       routes: []),
+//   GoRoute(
+//     name: RoutesData.product.routeName,
+//     path: RoutesData.product.routePath,
+//     builder: (context, state) =>
+//         ProductPage(query: state.pathParameters['query']!),
+//   ),
+//   GoRoute(
+//     name: RoutesData.login.routeName,
+//     path: RoutesData.login.routePath,
+//     builder: (context, state) => const LoginPage(),
+//   ),
+//   GoRoute(
+//     name: RoutesData.favorites.routeName,
+//     path: RoutesData.favorites.routePath,
+//     builder: (context, state) {
+//       //TODO: Make an api call to get the user id and the list of favorites of this user.
+//       return FavoritesPage(
+//           userId: state.pathParameters['userId']!,
+//           userFavoritesList: const [
+//             'abc123',
+//             'def456',
+//             'ghi789',
+//             'jkl012',
+//             'mno345',
+//             'pqr678',
+//             'stu901',
+//             'vwx234',
+//             'yza567',
+//             'bcd890',
+//           ]);
       // if ((state.pathParameters['token'] != null) &&
       //     state.pathParameters['token'] == 'yayboi') {
       //   //TODO: Make an api call to get the user id and the list of favorites of this user.
@@ -88,7 +155,7 @@ final _router = GoRouter(routes: [
       // } else {
       //   return const LoginPage();
       // }
-    },
+    // },
     // routes: [
     //   GoRoute(
     //     name: RoutesData.product.routeName,
@@ -97,8 +164,8 @@ final _router = GoRouter(routes: [
     //         ProductPage(query: state.pathParameters['query']!),
     //   ),
     // ],
-  ),
-]);
+//   ),
+// ]);
 
 // final _router = GoRouter(
 //   routes: [

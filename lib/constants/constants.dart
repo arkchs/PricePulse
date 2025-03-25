@@ -57,4 +57,6 @@ class RoutesData {
       RouteInfo(routePath: '/product/:query', routeName: 'product');
   static const RouteInfo favorites =
       RouteInfo(routePath: '/favorites/:userId', routeName: 'favorites');
+  static const RouteInfo accounts =
+      RouteInfo(routeName: 'accounts', routePath: '/account/:userId');
 }

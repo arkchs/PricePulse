@@ -21,6 +21,7 @@ void main() async {
       }
 
       final document = html_parser.parse(response.body);
+
       final List<String> element = document
           .querySelectorAll('div.Nx9bqj')
           .map((element) => element.text)
@@ -69,11 +70,18 @@ void main() async {
           .querySelectorAll('span.a-price-whole')
           .map((element) => element.text)
           .toList();
+      final List<String> imageLink = document
+          .querySelectorAll(
+            'img.s-image',
+          )
+          .map((e) => e.attributes['src'] ?? '')
+          .toList();
 
-      return Response.ok('{"data": "$element"}', headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      });
+      return Response.ok('{"data": "$element", "imageLink":"$imageLink"}',
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+          });
     } catch (e) {
       return Response.internalServerError(body: 'Scraping error: $e');
     }

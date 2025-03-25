@@ -131,6 +131,7 @@ class _LoginPageState extends State<LoginPage>
                               first: true,
                               title: 'Login',
                               rather: 'Not a member? Slide to Sign Up Instead',
+                              login: true,
                               // signUpOrLogin: signUpOrLogin,
                             ),
                             MyFormWidget(
@@ -138,6 +139,8 @@ class _LoginPageState extends State<LoginPage>
                               first: false,
                               title: 'SignUp',
                               rather: 'Already a member? Slide back to Login',
+                              login: false,
+
                               // signUpOrLogin: signUpOrLogin,
                             ),
                           ],
