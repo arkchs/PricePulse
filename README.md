@@ -1,6 +1,7 @@
 # Price Pulse
 
 A price comaparison website that scrapes the data from major e-commerce platforms and present it to the User to let them decide the best Price to buy the item from.
+New feature added: Mark your whishlist products as favorite and see them  in the favorites tab.
 
 ## Description
 
@@ -13,8 +14,12 @@ This project is a web scraping tool built with dart backend calls to the webpage
 - **Favorites Feature**: Users can save their favorite items, managed by Firestore.
 
 ## Design
-Landing Page | Login Page
-![image](https://github.com/arkchs/PricePulse/assets/113816003/fd82abe1-665c-4198-a418-9267b8f713bd) | ![image](https://github.com/arkchs/PricePulse/assets/113816003/7207f408-c645-4df7-a6dc-f9f1b1a8c46e)
+Landing Page
+![image](https://github.com/user-attachments/assets/1c3d1cdc-220b-4ce5-9777-efc80e251ad0)
+Login Page
+![image](https://github.com/user-attachments/assets/d0bdcb4f-ed01-4eae-ad73-566806989142)
+Dark Mode
+![image](https://github.com/user-attachments/assets/dcc19bf8-4d3e-45e0-a572-12761f1f5138)
 
 
 
@@ -26,13 +31,10 @@ Landing Page | Login Page
 ### Installing
 
 - Clone the repository: `git clone https://github.com/arkchs/PricePulse.git`
-- Set up your Firebase project and download the config file.
-
-### Executing program
-
-- Run the Flutter app on your device or emulator.
-- Sign in using Firebase Authentication.
-- Use the web scraping feature and add items to favorites.
+- To run the application locally:
+  1. flutter run -d chrome
+  2 .dart server/app.dart
+- Try out the fronend using this link (static file only backend not deployed): https://arkchs.github.io/PricePulse/
 
 ## Help
 
