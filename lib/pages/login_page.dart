@@ -177,7 +177,7 @@ Container decorationImage(Size size, String assetname) {
       border: Border.all(color: Colors.transparent),
       image: DecorationImage(
           // opacity: 0.8,
-          image: AssetImage('assets/$assetname'),
+          image: AssetImage('$assetname'),
           fit: BoxFit.fill),
       borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(20), bottomLeft: Radius.circular(20)),
