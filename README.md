@@ -14,11 +14,13 @@ This project is a web scraping tool built with dart backend calls to the webpage
 - **Favorites Feature**: Users can save their favorite items, managed by Firestore.
 
 ## Design
-Landing Page
+### **Landing Page**
 ![image](https://github.com/user-attachments/assets/1c3d1cdc-220b-4ce5-9777-efc80e251ad0)
-Login Page
+
+### **Login Page**
 ![image](https://github.com/user-attachments/assets/d0bdcb4f-ed01-4eae-ad73-566806989142)
-Dark Mode
+
+### **Dark Mode**
 ![image](https://github.com/user-attachments/assets/dcc19bf8-4d3e-45e0-a572-12761f1f5138)
 
 
